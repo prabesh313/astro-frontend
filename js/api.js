@@ -47,14 +47,14 @@ async function registerUser(username, email, password) {
     return res;
 }
 
-// ── Books ─────────────────────────────────────────
+//  Books 
 async function getBooks(search = "", category = "") {
     let url = `/books/?search=${search}&category=${category}`;
     const res = await apiFetch(url);
     return res.json();
 }
 
-// ── Rituals & Mantras ─────────────────────────────
+// Rituals & Mantras
 async function getRituals(search = "") {
     const res = await apiFetch(`/rituals/?search=${search}`);
     return res.json();
@@ -65,7 +65,7 @@ async function getMantras(search = "") {
     return res.json();
 }
 
-// ── User Profile ──────────────────────────────────
+//  User Profile 
 async function getProfile() {
     const res = await apiFetch("/users/profile/");
     return res.json();
@@ -79,7 +79,7 @@ async function createProfile(data) {
     return res;
 }
 
-// ── Astrology ─────────────────────────────────────
+//  Astrology
 async function getTodayPanchang() {
     const res = await apiFetch("/astrology/panchang/today/");
     return res.json();
