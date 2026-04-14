@@ -3,7 +3,7 @@ function saveTokens(access,Refresh){
     localStorage.setItem("refresh_token",Refresh);
 }
 
-function isLOggedIn(){
+function isLoggedIn(){
     return !!localStorage.getItem("access_token");
 }
 
