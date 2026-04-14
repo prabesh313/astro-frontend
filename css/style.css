@@ -1,0 +1,74 @@
+/*  General  */
+body {
+    background-color: #fdf8f0;  /* warm off-white, feels traditional */
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/*  Navbar  */
+.navbar {
+    background: linear-gradient(135deg, #8B0000, #c0392b) !important;
+}
+.navbar-brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/*  Cards  */
+.book-card {
+    transition: transform 0.2s;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/*  Panchang Widget  */
+.panchang-card {
+    background: linear-gradient(135deg, #fff8e7, #fdebd0);
+    border-left: 4px solid #e67e22;
+    border-radius: 8px;
+}
+.panchang-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0e0c0;
+}
+
+/*  Kundali  */
+.kundali-result {
+    background: linear-gradient(135deg, #f8f0ff, #ede0ff);
+    border-left: 4px solid #8e44ad;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+/*  Hero Section  */
+.hero {
+    background: linear-gradient(135deg, #8B0000 0%, #c0392b 50%, #e74c3c 100%);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+/*  Section Titles  */
+.section-title {
+    color: #8B0000;
+    font-weight: 700;
+    border-bottom: 3px solid #e74c3c;
+    padding-bottom: 8px;
+    margin-bottom: 1.5rem;
+}
+
+/*  Loading Spinner  */
+.spinner-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/*  Alert Messages  */
+.alert { border-radius: 8px; }
