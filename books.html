@@ -31,7 +31,7 @@
             <input type="text" id="search-input" class="form-control"
                    placeholder="Search books by title or category...">
             <button class="btn btn-danger" onclick="searchBooks()">Search</button>
-            <button class="btn btn-outline-secondary" onclick="loadBooks('')">Clear</button>
+            <button class="btn btn-outline-secondary" onclick="clearSearch()">Clear</button>
         </div>
 
         <!-- Loading -->
@@ -59,10 +59,11 @@
 
             const data = await getBooks(search);
             const books = data.results || data;
+            
 
             document.getElementById("books-loading").classList.add("d-none");
 
-            if (!books || books.length === 0) {
+            if (!books || books.length === 0){
                 document.getElementById("no-results").classList.remove("d-none");
                 return;
             }
@@ -95,6 +96,11 @@
         function searchBooks() {
             const query = document.getElementById("search-input").value.trim();
             loadBooks(query);
+        }
+
+        function clearSearch() {
+            document.getElementById("search-input").value = "";
+            loadBooks("");
         }
 
         // Search on Enter key

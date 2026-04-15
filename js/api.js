@@ -47,21 +47,21 @@ async function registerUser(username, email, password) {
     return res;
 }
 
-//  Books 
+//  Books
 async function getBooks(search = "", category = "") {
-    let url = `/books/?search=${search}&category=${category}`;
+    let url = `/books/?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}`;
     const res = await apiFetch(url);
     return res.json();
 }
 
 // Rituals & Mantras
 async function getRituals(search = "") {
-    const res = await apiFetch(`/rituals/?search=${search}`);
+    const res = await apiFetch(`/rituals/?search=${encodeURIComponent(search)}`);
     return res.json();
 }
 
 async function getMantras(search = "") {
-    const res = await apiFetch(`/mantras/?search=${search}`);
+    const res = await apiFetch(`/mantras/?search=${encodeURIComponent(search)}`);
     return res.json();
 }
 
