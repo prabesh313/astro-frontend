@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kundali — Astro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-dark navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Astro</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rituals.html">Rituals</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="kundali.html" id="nav-kundali">Kundali</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html" id="nav-login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="nav-logout" style="display:none" onclick="logout()">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+
+        <!-- Not logged in warning -->
+        <div id="login-warning" class="alert alert-warning d-none">
+            Please <a href="login.html">login</a> to generate your Kundali.
+        </div>
+
+        <div id="main-content">
+            <div class="row">
+
+                <!-- Left: Profile Form -->
+                <div class="col-md-5">
+                    <h3 class="section-title">⭐ Your Birth Details</h3>
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div id="form-msg" class="alert d-none"></div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="full_name" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Birth Date</label>
+                                <input type="date" id="birth_date" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Birth Time</label>
+                                <input type="time" id="birth_time" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Birth Place</label>
+                                <input type="text" id="birth_place" class="form-control"
+                                       placeholder="e.g. Kathmandu, Nepal">
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label class="form-label">Latitude</label>
+                                    <input type="number" id="birth_latitude" class="form-control"
+                                           placeholder="27.7172" step="0.0001">
+                                </div>
+                                <div class="col">
+                                    <label class="form-label">Longitude</label>
+                                    <input type="number" id="birth_longitude" class="form-control"
+                                           placeholder="85.3240" step="0.0001">
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                Find coordinates at
+                                <a href="https://www.latlong.net" target="_blank">latlong.net</a>
+                            </small>
+
+                            <div class="d-grid gap-2 mt-3">
+                                <button class="btn btn-danger" onclick="saveProfile()">
+                                    💾 Save Profile
+                                </button>
+                                <button class="btn btn-outline-danger" onclick="generateKundaliNow()">
+                                    ✨ Generate Kundali
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Kundali Result -->
+                <div class="col-md-7">
+                    <h3 class="section-title">🔯 Kundali Result</h3>
+
+                    <div id="kundali-loading" class="spinner-wrap d-none">
+                        <div class="spinner-border text-danger"></div>
+                    </div>
+
+                    <div id="kundali-placeholder" class="alert alert-light text-center py-5">
+                        <div style="font-size:3rem">🔯</div>
+                        <p class="mt-2 text-muted">
+                            Save your birth details and click Generate Kundali
+                        </p>
+                    </div>
+
+                    <div id="kundali-result" class="d-none">
+                        <div class="kundali-result mb-3">
+                            <h5>✨ Kundali Generated Successfully</h5>
+                            <p class="text-muted small mb-0" id="kundali-date"></p>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-3">Chart Data</h6>
+                                <pre id="kundali-data"
+                                     style="font-size:0.75rem;max-height:400px;overflow-y:auto;background:#f8f9fa;padding:1rem;border-radius:8px;">
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+   
