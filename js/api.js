@@ -65,7 +65,7 @@ async function getMantras(search = "") {
     return res.json();
 }
 
-//  User Profile 
+//  User Profile
 async function getProfile() {
     const res = await apiFetch("/users/profile/");
     return res.json();

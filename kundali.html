@@ -121,4 +121,89 @@
         </div>
     </div>
 
-   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Redirect to login if not logged in
+        if (!isLoggedIn()) {
+            document.getElementById("login-warning").classList.remove("d-none");
+            document.getElementById("main-content").classList.add("d-none");
+        } else {
+            loadExistingProfile();
+        }
+
+        // Load profile into form if it exists
+        async function loadExistingProfile() {
+            try {
+                const data = await getProfile();
+                if (data.full_name) {
+                    document.getElementById("full_name").value = data.full_name;
+                    document.getElementById("birth_date").value = data.birth_date;
+                    document.getElementById("birth_time").value = data.birth_time;
+                    document.getElementById("birth_place").value = data.birth_place;
+                    document.getElementById("birth_latitude").value = data.birth_latitude || "";
+                    document.getElementById("birth_longitude").value = data.birth_longitude || "";
+                }
+            } catch (e) {
+                console.log("No existing profile");
+            }
+        }
+
+        async function saveProfile() {
+            const msg = document.getElementById("form-msg");
+            const data = {
+                full_name: document.getElementById("full_name").value,
+                birth_date: document.getElementById("birth_date").value,
+                birth_time: document.getElementById("birth_time").value  + ":00",
+                birth_place: document.getElementById("birth_place").value,
+                birth_latitude: parseFloat(document.getElementById("birth_latitude").value) || 27.7172,
+                birth_longitude: parseFloat(document.getElementById("birth_longitude").value) || 85.3240,
+            };
+
+            // Try POST first, if exists use PUT
+            let res = await createProfile(data);
+
+            // If profile exists, update it
+            if (res.status === 400) {
+                res = await apiFetch("/users/profile/", {
+                    method: "PUT",
+                    body: JSON.stringify(data),
+                });
+            }
+
+            if (res.ok) {
+                msg.className = "alert alert-success";
+                msg.textContent = "Profile saved successfully!";
+                msg.classList.remove("d-none");
+            } else {
+                msg.className = "alert alert-danger";
+                msg.textContent = "Failed to save profile.";
+                msg.classList.remove("d-none");
+            }
+        }
+
+        async function generateKundaliNow() {
+            document.getElementById("kundali-loading").classList.remove("d-none");
+            document.getElementById("kundali-placeholder").classList.add("d-none");
+            document.getElementById("kundali-result").classList.add("d-none");
+
+            const res = await generateKundali();
+            const data = await res.json();
+
+            document.getElementById("kundali-loading").classList.add("d-none");
+
+            if (res.ok) {
+                document.getElementById("kundali-result").classList.remove("d-none");
+                document.getElementById("kundali-date").textContent =
+                    "Generated at: " + new Date(data.kundali?.generated_at).toLocaleString();
+                document.getElementById("kundali-data").textContent =
+                    JSON.stringify(data.kundali?.chart_data, null, 2);
+            } else {
+                document.getElementById("kundali-placeholder").classList.remove("d-none");
+                alert("Error: " + (data.error || "Could not generate Kundali"));
+            }
+        }
+    </script>
+</body>
+</html>
