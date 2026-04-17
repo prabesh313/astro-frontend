@@ -35,7 +35,7 @@
 
                 <!-- Left: Profile Form -->
                 <div class="col-md-5">
-                    <h3 class="section-title">⭐ Your Birth Details</h3>
+                    <h3 class="section-title">Your Birth Details</h3>
                     <div class="card shadow">
                         <div class="card-body">
                             <div id="form-msg" class="alert d-none"></div>
@@ -76,10 +76,10 @@
 
                             <div class="d-grid gap-2 mt-3">
                                 <button class="btn btn-danger" onclick="saveProfile()">
-                                    💾 Save Profile
+                                     Save Profile
                                 </button>
                                 <button class="btn btn-outline-danger" onclick="generateKundaliNow()">
-                                    ✨ Generate Kundali
+                                     Generate Kundali
                                 </button>
                             </div>
                         </div>
@@ -88,14 +88,14 @@
 
                 <!-- Right: Kundali Result -->
                 <div class="col-md-7">
-                    <h3 class="section-title">🔯 Kundali Result</h3>
+                    <h3 class="section-title"> Kundali Result</h3>
 
                     <div id="kundali-loading" class="spinner-wrap d-none">
                         <div class="spinner-border text-danger"></div>
                     </div>
 
                     <div id="kundali-placeholder" class="alert alert-light text-center py-5">
-                        <div style="font-size:3rem">🔯</div>
+                        <div style="font-size:3rem"></div>
                         <p class="mt-2 text-muted">
                             Save your birth details and click Generate Kundali
                         </p>
@@ -190,6 +190,7 @@
 
             const res = await generateKundali();
             const data = await res.json();
+            console.log("FULL RESPONSE:", data);
 
             document.getElementById("kundali-loading").classList.add("d-none");
 
@@ -198,7 +199,7 @@
                 document.getElementById("kundali-date").textContent =
                     "Generated at: " + new Date(data.kundali?.generated_at).toLocaleString();
                 document.getElementById("kundali-data").textContent =
-                    JSON.stringify(data.kundali?.chart_data, null, 2);
+                    JSON.stringify(data.kundali.chart_data, null, 2);
             } else {
                 document.getElementById("kundali-placeholder").classList.remove("d-none");
                 alert("Error: " + (data.error || "Could not generate Kundali"));

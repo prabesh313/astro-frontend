@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rituals — Astro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-dark navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Astro</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="rituals.html">Rituals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kundali.html" id="nav-kundali" style="display:none">Kundali</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html" id="nav-login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="nav-logout" style="display:none" onclick="logout()">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h3 class="section-title">🪔 Rituals & Mantras</h3>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <button class="nav-link active" onclick="showTab('rituals')">Rituals</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="showTab('mantras')">Mantras</button>
+            </li>
+        </ul>
+
+        <!-- Search -->
+        <div class="input-group mb-4">
+            <input type="text" id="search-input" class="form-control" placeholder="Search...">
+            <button class="btn btn-danger" onclick="doSearch()">Search</button>
+            <button class="btn btn-outline-secondary" onclick="clearSearch()">Clear</button>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="spinner-wrap">
+            <div class="spinner-border text-danger"></div>
+        </div>
+
+        <!-- Rituals List -->
+        <div id="rituals-section">
+            <div id="rituals-list" class="d-none"></div>
+        </div>
+
+        <!-- Mantras List -->
+        <div id="mantras-section" class="d-none">
+            <div id="mantras-list"></div>
+        </div>
+    </div>
+
+    <!-- Ritual Detail Modal -->
+    <div class="modal fade" id="ritualModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modal-title">Ritual Detail</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-danger">Steps</h6>
+                            <ol id="modal-steps" class="ps-3"></ol>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-danger">Required Items (Samagri)</h6>
+                            <ul id="modal-items" class="ps-3"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
