@@ -83,3 +83,111 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let currentTab = "rituals";
+
+        function showTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
+            event.target.classList.add("active");
+            document.getElementById("rituals-section").classList.toggle("d-none", tab !== "rituals");
+            document.getElementById("mantras-section").classList.toggle("d-none", tab !== "mantras");
+            doSearch();
+        }
+
+        function doSearch() {
+            const q = document.getElementById("search-input").value.trim();
+            if (currentTab === "rituals") loadRituals(q);
+            else loadMantras(q);
+        }
+
+        function clearSearch() {
+            document.getElementById("search-input").value = "";
+            doSearch();
+        }
+
+        async function loadRituals(search = "") {
+            document.getElementById("loading").classList.remove("d-none");
+            document.getElementById("rituals-list").classList.add("d-none");
+
+            const data = await getRituals(search);
+            const rituals = data.results || data;
+
+            document.getElementById("loading").classList.add("d-none");
+            document.getElementById("rituals-list").classList.remove("d-none");
+
+            document.getElementById("rituals-list").innerHTML = rituals.length === 0
+                ? `<div class="alert alert-info">No rituals found.</div>`
+                : rituals.map(r => `
+                    <div class="card book-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="card-title">${r.name}</h5>
+                                    <span class="badge bg-danger">${r.category}</span>
+                                    <span class="badge bg-secondary ms-1">${r.duration_minutes} mins</span>
+                                    <p class="mt-2 text-muted small">${r.description}</p>
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm"
+                                        onclick='showRitualDetail(${JSON.stringify(r)})'>
+                                    View Steps
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        async function loadMantras(search = "") {
+            document.getElementById("loading").classList.remove("d-none");
+
+            const data = await getMantras(search);
+            const mantras = data.results || data;
+
+            document.getElementById("loading").classList.add("d-none");
+
+            document.getElementById("mantras-list").innerHTML = mantras.length === 0
+                ? `<div class="alert alert-info">No mantras found.</div>`
+                : mantras.map(m => `
+                    <div class="card book-card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">${m.name}</h5>
+                            <span class="badge bg-secondary">${m.language}</span>
+                            <p class="mt-3" style="font-size:1.1rem;color:#8B0000;font-style:italic;">
+                                ${m.text}
+                            </p>
+                            ${m.meaning
+                                ? `<p class="text-muted small">${m.meaning}</p>`
+                                : ''}
+                            ${m.audio
+                                ? `<audio controls class="w-100 mt-2">
+                                       <source src="${m.audio}">
+                                   </audio>`
+                                : ''}
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function showRitualDetail(ritual) {
+            document.getElementById("modal-title").textContent = ritual.name;
+
+            const steps = Array.isArray(ritual.steps) ? ritual.steps : [];
+            document.getElementById("modal-steps").innerHTML =
+                steps.map(s => `<li class="mb-1">${s}</li>`).join('');
+
+            const items = Array.isArray(ritual.required_items) ? ritual.required_items : [];
+            document.getElementById("modal-items").innerHTML =
+                items.map(i => `<li class="mb-1">${i}</li>`).join('');
+
+            new bootstrap.Modal(document.getElementById("ritualModal")).show();
+        }
+
+        // Load rituals on start
+        loadRituals();
+    </script>
+</body>
+</html>
