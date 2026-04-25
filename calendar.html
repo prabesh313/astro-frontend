@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar — Karmakanda Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Calendar Specific Styles */
+        .calendar-wrap {
+            background: var(--color-background-primary);
+            border: 0.5px solid var(--color-border-tertiary);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .cal-header {
+            background: linear-gradient(135deg, #8B0000, #c0392b);
+            color: white;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cal-header .month-title {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .cal-header .month-sub {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-top: 2px;
+        }
+
+        .cal-nav {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .cal-nav:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .cal-nav:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .day-headers {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #a00000;
+            border-bottom: 1px solid #8B0000;
+        }
+
+        .day-hdr {
+            text-align: center;
+            padding: 8px 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .day-hdr.sat {
+            background: #c0392b;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5px;
+            background: var(--color-border-tertiary);
+            padding: 0.5px;
+        }
+
+        .cal-cell {
+            background: var(--color-background-primary);
+            padding: 8px 6px;
+            min-height: 75px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 0.5px solid var(--color-border-tertiary);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cal-cell:hover:not(.empty) {
+            background: var(--color-background-secondary);
+            transform: scale(1.02);
+        }
+
+        .cal-cell.empty {
+            background: var(--color-background-secondary);
+            cursor: default;
+        }
+
+        .cal-cell.today {
+            background: linear-gradient(135deg, #fff8e1, #fffbf0);
+            border: 1.5px solid #e67e22;
+        }
+
+        .cal-cell.today .bs-date {
+            color: #8B0000;
+        }
+
+        .cal-cell.today::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 7px;
+            height: 7px;
+            background: #e67e22;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .cal-cell.selected {
+            background: #fff0f0;
+            border: 1.5px solid #8B0000;
+        }
+
+        .bs-date {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            line-height: 1;
+        }
+
+        .cal-cell.sat .bs-date,
+        .cal-cell.festival .bs-date {
+            color: #c0392b;
+        }
+
+        .ad-date {
+            font-size: 9px;
+            color: var(--color-text-tertiary);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .tithi {
+            font-size: 9px;
+            color: #8B0000;
+            margin-top: 3px;
+            font-weight: 500;
+        }
+
+        .festival-label {
+            font-size: 8px;
+            color: #c0392b;
+            font-weight: 600;
+            margin-top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+
+        .detail-panel {
+            background: linear-gradient(135deg, #fff8f0, #fdebd0);
+            border-top: 1px solid #e67e22;
+            padding: 16px 18px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .detail-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8B0000;
+            margin-bottom: 12px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .detail-item {
+            background: rgba(255,255,255,0.6);
+            padding: 8px 10px;
+            border-radius: 6px;
+            border-left: 3px solid #e67e22;
+            font-size: 12px;
+        }
+
+        .detail-label {
+            color: var(--color-text-secondary);
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+        }
+
+        .detail-val {
+            color: #8B0000;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 18px;
+            padding: 10px 18px;
+            border-top: 0.5px solid var(--color-border-tertiary);
+            flex-wrap: wrap;
+            background: var(--color-background-secondary);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--color-text-secondary);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .upcoming-events {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--color-background-secondary);
+            border-radius: 8px;
+        }
+
+        .upcoming-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8B0000;
+            margin-bottom: 12px;
+        }
+
+        .event-item {
+            padding: 10px 12px;
+            background: var(--color-background-primary);
+            border-left: 3px solid #e67e22;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .event-date {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        .event-name {
+            color: #8B0000;
+            font-weight: 600;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner-border {
+            color: #8B0000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Astro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rituals.html">Rituals</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="calendar.html">Calendar</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="kundali.html" id="nav-kundali" style="display:none">Kundali</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html" id="nav-login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-logout" style="display:none" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="section-title">📅 Nepali BS Calendar </h2>
+
+        <div class="calendar-wrap">
+            <div class="cal-header">
+                <button class="cal-nav" id="prev-btn" onclick="changeMonth(-1)">❮</button>
+                <div style="text-align:center; flex:1">
+                    <div class="month-title" id="bs-month-label">Loading...</div>
+                    <div class="month-sub" id="ad-month-label">Loading...</div>
+                </div>
+                <button class="cal-nav" id="next-btn" onclick="changeMonth(1)">❯</button>
+            </div>
+
+            <div class="day-headers">
+                <div class="day-hdr">आइत</div>
+                <div class="day-hdr">सोम</div>
+                <div class="day-hdr">मंगल</div>
+                <div class="day-hdr">बुध</div>
+                <div class="day-hdr">बिहि</div>
+                <div class="day-hdr">शुक्र</div>
+                <div class="day-hdr sat">शनि</div>
+            </div>
+
+            <div class="cal-grid" id="cal-grid"></div>
+
+            <div class="detail-panel" id="detail-panel">
+                <div class="detail-title" id="detail-title">Click any date to see details</div>
+                <div class="detail-grid" id="detail-grid"></div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#e67e22"></div>
+                    <span>Today</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#c0392b"></div>
+                    <span>Festival / Saturday</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#f0e0b0"></div>
+                    <span>Selected</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Festivals -->
+        <div class="upcoming-events">
+            <div class="upcoming-title">🎉 Upcoming Festivals & Events</div>
+            <div id="upcoming-list"></div>
+        </div>
+    </div>
