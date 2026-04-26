@@ -370,3 +370,214 @@
             <div id="upcoming-list"></div>
         </div>
     </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Nepali Numbers
+        const NP_NUMS = ['०','१','२','३','४','५','६','७','८','९'];
+        function toNepali(n) {
+            return String(n).split('').map(d => NP_NUMS[+d]).join('');
+        }
+
+        const BS_MONTHS = ['बैशाख','जेठ','असार','श्रावण','भाद्र','आश्विन','कार्तिक','मंसिर','पौष','माघ','फाल्गुन','चैत्र'];
+        const AD_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+        let currentYear = 2082;
+        let currentMonth = 1;
+        let selectedDay = null;
+        let calendarData = null;
+        let festivalsData = {};
+        let panchangsData = {};
+        let todayDate = null;
+
+        async function init() {
+            // Get today's date from backend
+            try {
+                const res = await fetch(`${BASE_URL}/astrology/current-date/`);
+                const data = await res.json();
+                todayDate = new Date(data.today_ad);
+                currentYear = data.today_bs?.year || 2082;
+                currentMonth = data.today_bs?.month || 1;
+            } catch (e) {
+                console.error('Failed to get current date:', e);
+                todayDate = new Date();
+            }
+
+            await loadCalendarMonth(currentYear, currentMonth);
+        }
+
+        async function loadCalendarMonth(year, month) {
+            try {
+                const res = await fetch(
+                    `${BASE_URL}/astrology/calendar/month/?bs_year=${year}&bs_month=${month}`
+                );
+                const data = await res.json();
+
+                calendarData = data.calendar;
+                festivalsData = {};
+                panchangsData = {};
+
+                // Index festivals by day
+                data.festivals.forEach(f => {
+                    const day = parseInt(f.bs_date.split('-')[2]);
+                    festivalsData[day] = f;
+                });
+
+                // Index panchangs by AD date
+                data.panchangs.forEach(p => {
+                    panchangsData[p.date] = p;
+                });
+
+                // Update month label
+                document.getElementById('bs-month-label').textContent =
+                    `${BS_MONTHS[month-1]} ${toNepali(year)}`;
+
+                const adMonth1 = AD_MONTHS[calendarData.ad_month_start.split('-')[1] - 1];
+                const adMonth2 = AD_MONTHS[(calendarData.ad_month_start.split('-')[1] % 12)];
+                document.getElementById('ad-month-label').textContent =
+                    `${adMonth1} / ${adMonth2} ${calendarData.ad_month_start.split('-')[0]}`;
+
+                renderCalendar();
+                loadUpcomingFestivals();
+            } catch (e) {
+                console.error('Failed to load calendar:', e);
+                alert('Failed to load calendar data');
+            }
+        }
+
+        function renderCalendar() {
+            const days = calendarData.num_days;
+            const startDay = calendarData.start_day_of_week;
+            const grid = document.getElementById('cal-grid');
+            grid.innerHTML = '';
+
+            // Empty cells before month start day
+            for (let i = 0; i < startDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'cal-cell empty';
+                grid.appendChild(empty);
+            }
+
+            // Date cells
+            const baseDate = new Date(calendarData.ad_month_start);
+            for (let d = 1; d <= days; d++) {
+                const cell = document.createElement('div');
+                const dayOfWeek = (startDay + d - 1) % 7;
+                const isSat = dayOfWeek === 6;
+                const currentDate = new Date(baseDate);
+                currentDate.setDate(currentDate.getDate() + (d - 1));
+                const isToday = todayDate && 
+                    currentDate.toDateString() === todayDate.toDateString();
+                const fest = festivalsData[d];
+                const isSelected = selectedDay === d;
+
+                cell.className = [
+                    'cal-cell',
+                    isSat ? 'sat' : '',
+                    isToday ? 'today' : '',
+                    fest ? 'festival' : '',
+                    isSelected ? 'selected' : '',
+                ].filter(Boolean).join(' ');
+
+                const adDateStr = currentDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
+                const panchang = panchangsData[adDateStr];
+
+                cell.innerHTML = `
+                    <div class="bs-date">${toNepali(d)}</div>
+                    <div class="ad-date">${currentDate.getDate()} ${AD_MONTHS[currentDate.getMonth()]}</div>
+                    ${panchang ? `<div class="tithi">${extractTithiFromPanchang(panchang)}</div>` : ''}
+                    ${fest ? `<span class="festival-label">${fest.name_nepali}</span>` : ''}
+                `;
+
+                cell.onclick = () => selectDay(d, currentDate, panchang, fest);
+                grid.appendChild(cell);
+            }
+        }
+
+        function extractTithiFromPanchang(panchang) {
+            try {
+                const data = panchang.data;
+                return data.tithi?.name || data.tithi?.details?.name || '—';
+            } catch (e) {
+                return '—';
+            }
+        }
+
+        function selectDay(d, adDate, panchang, fest) {
+            selectedDay = d;
+            renderCalendar();
+
+            const detailTitle = `${toNepali(d)} ${BS_MONTHS[currentMonth-1]} ${toNepali(currentYear)} — ${adDate.getDate()} ${AD_MONTHS[adDate.getMonth()]}`;
+            document.getElementById('detail-title').textContent = detailTitle;
+
+            let tithi = '—';
+            let nakshatra = '—';
+            if (panchang) {
+                try {
+                    const data = panchang.data;
+                    tithi = data.tithi?.name || data.tithi?.details?.name || '—';
+                    nakshatra = data.nakshatra?.name || data.nakshatra?.details?.name || '—';
+                } catch (e) {}
+            }
+
+            const varaNames = ['आइतबार','सोमबार','मंगलबार','बुधबार','बिहिबार','शुक्रबार','शनिबार'];
+            const varaIndex = (calendarData.start_day_of_week + d - 1) % 7;
+
+            const items = [
+                { label: 'तिथि', val: tithi },
+                { label: 'नक्षत्र', val: nakshatra },
+                { label: 'वार', val: varaNames[varaIndex] },
+                { label: 'पर्व', val: fest ? fest.name_nepali : '—' },
+                { label: 'महत्व', val: fest ? fest.significance : 'साधारण दिन' },
+            ];
+
+            document.getElementById('detail-grid').innerHTML = items.map(i =>
+                `<div class="detail-item">
+                    <div class="detail-label">${i.label}</div>
+                    <div class="detail-val">${i.val}</div>
+                </div>`
+            ).join('');
+        }
+
+        function changeMonth(dir) {
+            selectedDay = null;
+            currentMonth += dir;
+            if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+            if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+            loadCalendarMonth(currentYear, currentMonth);
+        }
+
+        async function loadUpcomingFestivals() {
+            try {
+                const res = await fetch(
+                    `${BASE_URL}/astrology/festivals/?bs_year=${currentYear}`
+                );
+                const festivals = await res.json();
+
+                const upcoming = festivals.filter(f => {
+                    const [y, m] = f.bs_date.split('-').map(Number);
+                    return m >= currentMonth;
+                }).slice(0, 8);
+
+                const html = upcoming.map(f =>
+                    `<div class="event-item">
+                        <span class="event-name">${f.name_nepali}</span>
+                        <span class="event-date">${f.bs_date}</span>
+                    </div>`
+                ).join('');
+
+                document.getElementById('upcoming-list').innerHTML = html || 
+                    '<p class="text-muted" style="font-size:12px">No upcoming festivals</p>';
+            } catch (e) {
+                console.error('Failed to load festivals:', e);
+            }
+        }
+
+        // Init
+        init();
+    </script>
+</body>
+</html>
