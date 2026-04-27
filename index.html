@@ -27,7 +27,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" id="nav-logout"
-                           style="display:none" onclick="logout()">Logout</a>
+                        style="display:none" onclick="logout()">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -47,7 +47,10 @@
 
     <!-- Daily Panchang -->
     <div class="container mt-5">
+
         <h3 class="section-title">📅 Today's Panchang</h3>
+        <button class="btn btn-sm btn-outline-secondary mb-3" onclick="loadCalendar()">Calendar</button>
+        
         <div id="panchang-loading" class="spinner-wrap">
             <div class="spinner-border text-danger"></div>
         </div>
@@ -159,6 +162,11 @@
         
 
         loadPanchang();
+
+            function loadCalendar() {
+                window.location.href = "calendar.html";
+            }
+
     </script>
 </body>
 </html>

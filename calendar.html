@@ -294,7 +294,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-dark navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Astro</a>
+            <a class="navbar-brand" href="index.html">Astro </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -319,7 +319,7 @@
     </nav>
 
     <div class="container mt-4">
-        <h2 class="section-title">📅 Nepali BS Calendar </h2>
+        <h2 class="section-title">📅 Nepali BS Calendar</h2>
 
         <div class="calendar-wrap">
             <div class="cal-header">
@@ -366,17 +366,16 @@
 
         <!-- Upcoming Festivals -->
         <div class="upcoming-events">
-            <div class="upcoming-title">🎉 Upcoming Festivals & Events</div>
+            <div class="upcoming-title"> Upcoming Festivals & Events</div>
             <div id="upcoming-list"></div>
         </div>
     </div>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Nepali Numbers
+
         const NP_NUMS = ['०','१','२','३','४','५','६','७','८','९'];
         function toNepali(n) {
             return String(n).split('').map(d => NP_NUMS[+d]).join('');
@@ -454,7 +453,7 @@
             const grid = document.getElementById('cal-grid');
             grid.innerHTML = '';
 
-            // Empty cells before month start day
+            // Empty cells
             for (let i = 0; i < startDay; i++) {
                 const empty = document.createElement('div');
                 empty.className = 'cal-cell empty';
