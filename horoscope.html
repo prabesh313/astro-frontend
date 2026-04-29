@@ -283,6 +283,136 @@
             <p>Select your rashi above to see today's prediction</p>
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        const RASHIS = [
+            { name: 'मेष (Aries)', english: 'aries', icon: '♈' },
+            { name: 'वृषभ (Taurus)', english: 'taurus', icon: '♉' },
+            { name: 'मिथुन (Gemini)', english: 'gemini', icon: '♊' },
+            { name: 'कर्क (Cancer)', english: 'cancer', icon: '♋' },
+            { name: 'सिंह (Leo)', english: 'leo', icon: '♌' },
+            { name: 'कन्या (Virgo)', english: 'virgo', icon: '♍' },
+            { name: 'तुला (Libra)', english: 'libra', icon: '♎' },
+            { name: 'वृश्चिक (Scorpio)', english: 'scorpio', icon: '♏' },
+            { name: 'धनु (Sagittarius)', english: 'sagittarius', icon: '♐' },
+            { name: 'मकर (Capricorn)', english: 'capricorn', icon: '♑' },
+            { name: 'कुम्भ (Aquarius)', english: 'aquarius', icon: '♒' },
+            { name: 'मीन (Pisces)', english: 'pisces', icon: '♓' },
+        ];
+
+        let selectedRashi = null;
+
+        function initRashiSelector() {
+            const selector = document.getElementById('rashi-selector');
+            selector.innerHTML = RASHIS.map(rashi =>
+                `<button class="rashi-btn" onclick="selectRashi('${rashi.english}', '${rashi.name}')">
+                    <div class="rashi-icon">${rashi.icon}</div>
+                    <div>${rashi.name}</div>
+                </button>`
+            ).join('');
+        }
+
+        async function selectRashi(englishName, rashiName) {
+            selectedRashi = englishName;
+
+            // Update button styles
+            document.querySelectorAll('.rashi-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.rashi-btn').classList.add('active');
+
+            // Show loading
+            document.getElementById('horoscope-result').style.display = 'none';
+            document.getElementById('no-selection').style.display = 'none';
+            document.getElementById('error-state').style.display = 'none';
+            document.getElementById('loading-state').style.display = 'block';
+
+            // Fetch real horoscope from backend API
+            await loadHoroscope(englishName, rashiName);
+        }
+
+        async function loadHoroscope(english, rashiName) {
+            try {
+                const res = await fetch(
+                    `${BASE_URL}/astrology/horoscope/daily/?rashi=${english}`
+                );
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Failed to fetch horoscope');
+                }
+
+                const horoscope = data.horoscope;
+
+                document.getElementById('selected-rashi-title').innerHTML = `
+                    <span>${rashiName}</span>
+                `;
+                document.getElementById('cached-badge').textContent = 
+                    data.cached ? '✓ Cached Today' : '✓ Just Fetched';
+                
+                document.getElementById('horoscope-text').textContent = horoscope.prediction || 'No prediction available';
+
+                // Render score stars
+                const renderStars = (score) => {
+                    const stars = [];
+                    for (let i = 1; i <= 5; i++) {
+                        stars.push(`<span class="star ${i <= score ? '' : 'empty'}">★</span>`);
+                    }
+                    return stars.join('');
+                };
+
+                document.getElementById('prediction-grid').innerHTML = `
+                    <div class="prediction-item">
+                        <div class="prediction-label">💕 प्रेम</div>
+                        <div class="prediction-val">${horoscope.love_score}/5</div>
+                        <div class="rating-stars">${renderStars(horoscope.love_score)}</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-label">💼 व्यवसाय</div>
+                        <div class="prediction-val">${horoscope.career_score}/5</div>
+                        <div class="rating-stars">${renderStars(horoscope.career_score)}</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-label">💪 स्वास्थ्य</div>
+                        <div class="prediction-val">${horoscope.health_score}/5</div>
+                        <div class="rating-stars">${renderStars(horoscope.health_score)}</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-label">💰 आर्थिक</div>
+                        <div class="prediction-val">${horoscope.money_score}/5</div>
+                        <div class="rating-stars">${renderStars(horoscope.money_score)}</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-label">🎨 भाग्यशाली रंग</div>
+                        <div class="prediction-val">${horoscope.lucky_color || '—'}</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-label">🔢 भाग्यशाली अंक</div>
+                        <div class="prediction-val">${horoscope.lucky_number || '—'}</div>
+                    </div>
+                `;
+
+                document.getElementById('advice-box').innerHTML = `
+                    <div class="advice-title">💡 आज का सुझाव</div>
+                    <div class="advice-text">${horoscope.advice || 'सकारात्मक दृष्टिकोण बनाए रखें'}</div>
+                `;
+
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('horoscope-result').style.display = 'block';
+
+            } catch (err) {
+                console.error('Horoscope error:', err);
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('error-state').textContent = `Error: ${err.message}`;
+                document.getElementById('error-state').style.display = 'block';
+            }
+        }
+
+        
+        initRashiSelector();
+    </script>
+</body>
+</html>
 
 
     
