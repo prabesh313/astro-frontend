@@ -33,6 +33,13 @@
                             <label class="form-label">Password</label>
                             <input type="password" id="password" class="form-control">
                         </div>
+                        <div class="mb-3">
+                        <label class="form-label">I am a</label>
+                        <select id="user_type" class="form-control">
+                            <option value="jajaman">Jajaman </option>
+                            <option value="purohit">Purohit </option>
+                        </select>
+                    </div>
                         <button class="btn btn-danger w-100" onclick="handleRegister()">
                             Register
                         </button>
@@ -52,11 +59,14 @@
             const username = document.getElementById("username").value.trim();
             const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value.trim();
+            const user_type = document.getElementById("user_type").value;
             const errorDiv = document.getElementById("error-msg");
             const successDiv = document.getElementById("success-msg");
 
-            const res = await registerUser(username, email, password);//is used to call the registerUser function, which is likely defined in the included api.js or auth.js file. This function is responsible for sending the registration data (username, email, and password) to the server and returning a response indicating whether the registration was successful or if there were any errors
+            const res = await registerUser(username, email, password, user_type);
             const data = await res.json();
+
+            console.log(res.status, data);
 
             if (res.ok) {
                 successDiv.textContent = "Account created! Redirecting to login...";

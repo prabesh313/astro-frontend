@@ -38,11 +38,11 @@ async function loginUser(username, password) {
     return res;
 }
 
-async function registerUser(username, email, password) {
+async function registerUser(username, email, password, user_type) {
     const res = await fetch(`${BASE_URL}/users/register/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, user_type }),
     });
     return res;
 }
