@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile — Karmakanda Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .profile-hero {
+            background: linear-gradient(135deg, #8B0000, #c0392b);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin: 0 auto 1rem;
+            border: 3px solid white;
+            overflow: hidden;
+            object-fit: cover;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-card {
+            background: var(--color-background-primary);
+            border: 0.5px solid var(--color-border-tertiary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .profile-card h4 {
+            color: #8B0000;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .profile-field {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 16px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 0.5px solid var(--color-border-tertiary);
+        }
+
+        .profile-field:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .profile-label {
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            font-size: 13px;
+        }
+
+        .profile-value {
+            color: var(--color-text-primary);
+            font-size: 14px;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .edit-form {
+            background: var(--color-background-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        .form-section h5 {
+            color: #8B0000;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .btn-edit-profile {
+            background: #8B0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-edit-profile:hover {
+            background: #c0392b;
+        }
+
+        .success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .error-msg {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .badge-verified {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            display: inline-block;
+            background: #fff3cd;
+            color: #856404;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            background: #fff8f0;
+            border-left: 3px solid #e67e22;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #8B0000;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--color-border-tertiary);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--color-text-secondary);
+            padding: 12px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #8B0000;
+        }
+
+        .tab-btn.active {
+            color: #8B0000;
+            border-bottom-color: #8B0000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .image-upload-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            margin-top: 8px;
+            object-fit: cover;
+            border: 1px solid var(--color-border-tertiary);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Astro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="profile.html">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="priests-list.html">Priests</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schedule.html" id="nav-schedule" style="display:none">My Schedule</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chats.html">Chats</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="section-title">👤 My Profile</h2>
+
+        <div id="success-msg" class="success-msg"></div>
+        <div id="error-msg" class="error-msg"></div>
+
+        <div class="profile-hero">
+            <div class="profile-avatar" id="avatar">
+                <img id="avatar-img" src="" alt="Profile" style="display:none">
+                <span id="avatar-icon">👤</span>
+            </div>
+            <h3 id="profile-name">Loading...</h3>
+            <p id="profile-type"></p>
+        </div>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('view')">View Profile</button>
+            <button class="tab-btn" onclick="switchTab('edit')">Edit Profile</button>
+        </div>
+
+        <div id="view-tab" class="tab-content active">
+            <div id="stats-section" style="display:none">
+                <h4 class="section-title">📊 Your Stats</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="stat-reviews">0</div>
+                        <div class="stat-label">Total Reviews</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="stat-rating">0.0</div>
+                        <div class="stat-label">⭐ Average Rating</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h4>Personal Information</h4>
+                <div class="profile-field">
+                    <div class="profile-label">Full Name</div>
+                    <div class="profile-value" id="view-full-name">—</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-label">Email</div>
+                    <div class="profile-value" id="view-email">—</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-label">Account Type</div>
+                    <div class="profile-value" id="view-user-type">—</div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h4> Astrological Information</h4>
+                <div class="profile-field">
+                    <div class="profile-label">Date of Birth</div>
+                    <div class="profile-value" id="view-birth-date">—</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-label">Birth Time</div>
+                    <div class="profile-value" id="view-birth-time">—</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-label">Birth Place</div>
+                    <div class="profile-value" id="view-birth-place">—</div>
+                </div>
+                <div class="profile-field">
+                    <div class="profile-label">Coordinates</div>
+                    <div class="profile-value">
+                        Lat: <span id="view-latitude">—</span> | Lon: <span id="view-longitude">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="priest-info-section" style="display:none">
+                <div class="profile-card">
+                    <h4> Purohit Profile</h4>
+
+                    <div class="profile-field" id="verification-field">
+                        <div class="profile-label">Verification Status</div>
+                        <div class="profile-value">
+                            <span id="verification-badge"></span>
+                        </div>
+                    </div>
+
+                    <div class="profile-field">
+                        <div class="profile-label">About You</div>
+                        <div class="profile-value" id="view-bio">—</div>
+                    </div>
+
+                    <div class="profile-field">
+                        <div class="profile-label">Phone Number</div>
+                        <div class="profile-value" id="view-phone">—</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Location/Address</div>
+                        <div class="profile-value" id="view-address">—</div>
+                    </div>
+
+                    <div class="profile-field">
+                        <div class="profile-label">Specializations</div>
+                        <div class="profile-value" id="view-specializations">—</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Experience</div>
+                        <div class="profile-value" id="view-experience-years">—</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Hourly Rate</div>
+                        <div class="profile-value">NRs.<span id="view-hourly-rate">0</span>/hour</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="edit-tab" class="tab-content">
+            <div class="edit-form">
+                <form onsubmit="saveProfile(event)">
+
+                    <div class="form-section">
+                        <h5> Personal Information</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" id="edit-full-name" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h5> Astrological Information</h5>
+                        <p style="font-size: 12px; color: #999; margin-bottom: 1rem;">
+                            Used for Kundali generation. Leave blank if not needed.
+                        </p>
+                        <div class="mb-3">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" id="edit-birth-date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Birth Time</label>
+                            <input type="time" id="edit-birth-time" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Birth Place</label>
+                            <input type="text" id="edit-birth-place" class="form-control" placeholder="e.g., Kathmandu">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Latitude</label>
+                                <input type="number" id="edit-latitude" class="form-control" step="0.0001" placeholder="27.7172">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Longitude</label>
+                                <input type="number" id="edit-longitude" class="form-control" step="0.0001" placeholder="85.3240">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="edit-priest-section" style="display:none">
+                        <div class="form-section">
+                            <h5> Purohit Profile Information</h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">About You (Bio)</label>
+                                <textarea id="edit-bio" class="form-control" rows="3" placeholder="Brief intro about yourself"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" id="edit-phone" class="form-control" placeholder="9841234567">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Location/Address</label>
+                                <input type="text" id="edit-address" class="form-control" placeholder="Where you're based">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Specializations</label>
+                                <textarea id="edit-specializations" class="form-control" rows="3" placeholder="e.g., Vivah Vidhi, Satyanarayan Puja, Griha Pravesh..."></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Years of Experience</label>
+                                <input type="number" id="edit-experience-years" class="form-control" min="0">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Hourly Rate (NRs.)</label>
+                                <input type="number" id="edit-hourly-rate" class="form-control" step="0.01" min="0">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Profile Photo</label>
+                                <input type="file" id="edit-profile-image" class="form-control" accept="image/*">
+                                <img id="image-preview" class="image-upload-preview" style="display:none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-edit-profile">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let profileData = null;
+
+        if (!isLoggedIn()) {
+            window.location.href = 'login.html';
+        }
+
+        async function loadProfile() {
+            try {
+                const res = await fetch(`${BASE_URL}/users/profile/`, {
+                    headers: { "Authorization": `Bearer ${getToken()}` }
+                });
+                const data = await res.json();
+
+                profileData = data;
+                const isPriest = data.user_type === 'purohit';
+
+                document.getElementById('avatar-icon').style.display = isPriest ? 'none' : 'block';
+                if (data.profile_image) {
+                    document.getElementById('avatar-img').src = data.profile_image;
+                    document.getElementById('avatar-img').style.display = 'block';
+                }
+                document.getElementById('profile-name').textContent = data.full_name;
+                document.getElementById('profile-type').textContent = data.user_type_display;
+
+                if (isPriest) {
+                    document.getElementById('nav-schedule').style.display = 'block';
+                }
+
+                document.getElementById('view-full-name').textContent = data.full_name;
+                document.getElementById('view-email').textContent = data.email;
+                document.getElementById('view-user-type').textContent = data.user_type_display;
+
+                document.getElementById('view-birth-date').textContent = data.birth_date || '—';
+                document.getElementById('view-birth-time').textContent = data.birth_time || '—';
+                document.getElementById('view-birth-place').textContent = data.birth_place || '—';
+                document.getElementById('view-latitude').textContent = data.birth_latitude || '—';
+                document.getElementById('view-longitude').textContent = data.birth_longitude || '—';
+
+
+                document.getElementById('edit-full-name').value = data.full_name;
+                document.getElementById('edit-birth-date').value = data.birth_date || '';
+                document.getElementById('edit-birth-time').value = data.birth_time || '';
+                document.getElementById('edit-birth-place').value = data.birth_place || '';
+                document.getElementById('edit-latitude').value = data.birth_latitude || '';
+                document.getElementById('edit-longitude').value = data.birth_longitude || '';
+
+                if (isPriest) {
+                    document.getElementById('priest-info-section').style.display = 'block';
+                    document.getElementById('stats-section').style.display = 'block';
+                    document.getElementById('edit-priest-section').style.display = 'block';
+
+                    document.getElementById('stat-reviews').textContent = data.total_reviews || 0;
+                    document.getElementById('stat-rating').textContent = (data.average_rating || 0).toFixed(1);
+
+
+                    const badge = document.getElementById('verification-badge');
+                    badge.innerHTML = data.is_verified
+                        ? '<span class="badge-verified">✓ Verified</span>'
+                        : '<span class="badge-pending">⏳ Pending Verification</span>';
+
+                    document.getElementById('view-bio').textContent = data.bio || '—';
+                    document.getElementById('view-phone').textContent = data.phone_number || '—';
+                    document.getElementById('view-address').textContent = data.address || '—';
+                    document.getElementById('view-specializations').textContent = data.specializations || '—';
+                    document.getElementById('view-experience-years').textContent = (data.experience_years || 0) + ' years';
+                    document.getElementById('view-hourly-rate').textContent = data.hourly_rate || '0';
+
+                    document.getElementById('edit-bio').value = data.bio || '';
+                    document.getElementById('edit-phone').value = data.phone_number || '';
+                    document.getElementById('edit-address').value = data.address || '';
+                    document.getElementById('edit-specializations').value = data.specializations || '';
+                    document.getElementById('edit-experience-years').value = data.experience_years || '';
+                    document.getElementById('edit-hourly-rate').value = data.hourly_rate || '';
+
+                    if (data.profile_image) {
+                        document.getElementById('image-preview').src = data.profile_image;
+                    }
+                }
+
+            } catch (err) {
+                console.error('Error:', err);
+                showError('Failed to load profile');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function saveProfile(e) {
+            e.preventDefault();
+
+            const data = {
+                full_name: document.getElementById('edit-full-name').value,
+                birth_date: document.getElementById('edit-birth-date').value || null,
+                birth_time: document.getElementById('edit-birth-time').value || null,
+                birth_place: document.getElementById('edit-birth-place').value,
+                birth_latitude: parseFloat(document.getElementById('edit-latitude').value) || null,
+                birth_longitude: parseFloat(document.getElementById('edit-longitude').value) || null,
+            };
+
+            if (profileData.user_type === 'purohit') {
+                data.bio = document.getElementById('edit-bio').value;
+                data.phone_number = document.getElementById('edit-phone').value;
+                data.address = document.getElementById('edit-address').value;
+                data.specializations = document.getElementById('edit-specializations').value;
+                data.experience_years = parseInt(document.getElementById('edit-experience-years').value) || 0;
+                data.hourly_rate = parseFloat(document.getElementById('edit-hourly-rate').value) || 0;
+            }
+
+            try {
+                const res = await fetch(`${BASE_URL}/users/profile/`, {
+                    method: 'PUT',
+                    headers: {
+                        "Authorization": `Bearer ${getToken()}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    showSuccess('✓ Profile updated!');
+                    await loadProfile();
+                    switchTab('view');
+                } else {
+                    const err = await res.json();
+                    showError(err.error || 'Failed to save');
+                }
+            } catch (err) {
+                showError('Error: ' + err.message);
+            }
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('success-msg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('error-msg');
+            el.textContent = '❌ ' + msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 5000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('edit-profile-image');
+            const preview = document.getElementById('image-preview');
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            preview.src = event.target.result;
+                            preview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
+        loadProfile();
+    </script>
+</body>
+</html>
