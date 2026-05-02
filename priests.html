@@ -159,8 +159,6 @@
     </style>
 </head>
 <body>
-
-    <!-- Navbar -->
     <nav class="navbar navbar-dark navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="index.html">Astro</a>
@@ -209,5 +207,120 @@
         </div>
     </div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        async function loadPriests(search = '') {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('priests-list').innerHTML = '';
+
+            try {
+                let url = `${BASE_URL}/priests/`;
+                if (search) {
+                    url += `?search=${encodeURIComponent(search)}`;
+                }
+
+                const res = await fetch(url);
+                const data = await res.json();
+
+                document.getElementById('loading').style.display = 'none';
+
+                const priests = data.results || data;
+                if (!Array.isArray(priests) || priests.length === 0) {
+                    document.getElementById('no-priests').style.display = 'block';
+                    return;
+                }
+
+                const html = priests.map(priest => `
+                    <div class="priest-card">
+                        <div class="priest-header">
+                            <div class="priest-image">🧑‍🩳</div>
+                            <div class="priest-info" style="flex:1">
+                                <h5>
+                                    ${priest.full_name}
+                                    ${priest.is_verified ? '<span class="verified-badge">✓ Verified</span>' : ''}
+                                </h5>
+                                <p> ${priest.average_rating || 0}/5 (${priest.total_reviews || 0} reviews)</p>
+                                <p> ${priest.experience_years} years experience</p>
+                                <p> ₹${priest.hourly_rate || 0}/hour</p>
+                                ${priest.bio ? `<p><em>${priest.bio}</em></p>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="priest-specs">
+                            <strong>Specializations:</strong> ${priest.specializations || 'Not specified'}
+                        </div>
+
+                        <div class="busy-dates-section">
+                            <div class="busy-dates-title">When This Priest is Busy</div>
+                            <div id="busy-${priest.id}" class="busy-dates-list">
+                                <div style="font-size:12px; color:#999;">Loading...</div>
+                            </div>
+                        </div>
+
+                        <div class="priest-actions">
+                            <button class="btn-chat" onclick="startChat(${priest.id})">
+                                Chat with ${priest.full_name.split(' ')[0]}
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('priests-list').innerHTML = html;
+                document.getElementById('no-priests').style.display = 'none';
+
+                priests.forEach(priest => {
+                    loadBusyDates(priest.id);
+                });
+
+            } catch (err) {
+                document.getElementById('loading').style.display = 'none';
+                console.error('Error loading priests:', err);
+            }
+        }
+
+        async function loadBusyDates(priestId) {
+            try {
+                const res = await fetch(`${BASE_URL}/priests/${priestId}/busy-dates/`);
+                const data = await res.json();
+
+                const busyDates = data.busy_dates || [];
+                const container = document.getElementById(`busy-${priestId}`);
+
+                if (busyDates.length === 0) {
+                    container.innerHTML = '<div class="no-busy-dates">No busy dates currently</div>';
+                } else {
+                    const badgesHtml = busyDates.slice(0, 5).map(date => {
+                        const d = new Date(date);
+                        return `<div class="busy-date-badge">${d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</div>`;
+                    }).join('');
+
+                    container.innerHTML = badgesHtml + (busyDates.length > 5 ? `<div class="busy-date-badge">+${busyDates.length - 5} more</div>` : '');
+                }
+            } catch (err) {
+                console.error('Error loading busy dates:', err);
+                document.getElementById(`busy-${priestId}`).innerHTML = '<div style="font-size:12px; color:#999;">Could not load busy dates</div>';
+            }
+        }
+
+        function searchPriests() {
+            const search = document.getElementById('search-input').value;
+            loadPriests(search);
+        }
+
+        function startChat(priestId) {
+            if (!isLoggedIn()) {
+                alert('Please login first');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            window.location.href = `chats.html?priest_id=${priestId}`;
+        }
+
+        loadPriests();
+    </script>
 </body>
 </html>
