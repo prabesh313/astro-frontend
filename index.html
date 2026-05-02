@@ -20,8 +20,10 @@
                     <li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
                     <li class="nav-item"><a class="nav-link" href="rituals.html">Rituals</a></li>
                     <li class="nav-item">
-                        <a class="nav-link" href="kundali.html" id="nav-kundali" style="display:none">Kundali</a>
-                    </li>
+                        <a class="nav-link" href="kundali.html" id="nav-kundali" style="display:none">Kundali</a></li>
+                        <li class="nav-item"><a class="nav-link" href="priests-list.html">Priests</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schedule.html" id="nav-schedule" style="display:none">My Schedule</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chats.html">Chats</a></li>
                     <li class="nav-item">
                         <a class="nav-link" href="login.html" id="nav-login">Login</a>
                     </li>
@@ -136,7 +138,6 @@
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // fetch and display today's panchang details
         async function loadPanchang() {
             console.log("FUNCTION STARTED");
             try {
@@ -171,6 +172,25 @@
             function openHoroscope() {
                 window.location.href = "horoscope.html";
             }
+
+        async function updateNavigation() {
+            if (isLoggedIn()) {
+                try {
+                    const res = await fetch(`${BASE_URL}/users/profile/`, {
+                        headers: { "Authorization": `Bearer ${getToken()}` }
+                    });
+                    const data = await res.json();
+                    
+                    if (data.user_type === 'purohit') {
+                        document.getElementById('nav-schedule').style.display = 'block';
+                    }
+                } catch (err) {
+                    console.error('Error:', err);
+                }
+            }
+        }
+
+        updateNavigation();
 
     </script>
 </body>
