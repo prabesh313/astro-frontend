@@ -34,6 +34,48 @@
             margin-top: 4px;
         }
 
+        .schedule-notes-link {
+            border: 0;
+            background: transparent;
+            padding: 0;
+            text-align: left;
+            color: #8B0000;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .schedule-notes-link:hover {
+            text-decoration: underline;
+        }
+
+        .detail-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .detail-item {
+            background: var(--color-background-secondary);
+            border: 1px solid var(--color-border-tertiary);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--color-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            color: var(--color-text-primary);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
         .schedule-actions {
             display: flex;
             gap: 8px;
@@ -236,25 +278,82 @@
     </div>
 
     <div class="modal fade" id="editModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header" style="background: #8B0000; color: white;">
                     <h5 class="modal-title">Edit Schedule Entry</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Event Title</label>
-                        <input type="text" id="edit_event_title" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Notes</label>
-                        <textarea id="edit_notes" class="form-control" rows="3"></textarea>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Busy Date</label>
+                            <input type="date" id="edit_busy_date" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Event Type</label>
+                            <select id="edit_event_type" class="form-select">
+                                <option value="vivah">विवाह (Marriage)</option>
+                                <option value="satyanarayan">सत्यनारायण पूजा</option>
+                                <option value="griha_pravesh">गृह प्रवेश (House Warming)</option>
+                                <option value="janai">जनै</option>
+                                <option value="annaprashan">अन्नप्राशन</option>
+                                <option value="upanayan">उपनयन</option>
+                                <option value="shradh">श्राद्ध</option>
+                                <option value="other">अन्य</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Event Title</label>
+                            <input type="text" id="edit_event_title" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Start Time</label>
+                            <input type="time" id="edit_start_time" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">End Time</label>
+                            <input type="time" id="edit_end_time" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Location</label>
+                            <input type="text" id="edit_location" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contact Person Name</label>
+                            <input type="text" id="edit_contact_person" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" id="edit_phone_number" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Notes</label>
+                            <textarea id="edit_notes" class="form-control" rows="4"></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-danger" onclick="saveEdit()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #8B0000; color: white;">
+                    <h5 class="modal-title">Schedule Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="detail-content" class="detail-grid"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-warning" onclick="editCurrentDetail()">Edit</button>
                 </div>
             </div>
         </div>
@@ -266,7 +365,65 @@
     <script src="js/auth.js"></script>
     <script>
         let currentEditingId = null;
+        let currentDetailItem = null;
         let scheduleData = [];
+        const eventTypeLabels = {
+            vivah: 'विवाह (Marriage)',
+            satyanarayan: 'सत्यनारायण पूजा',
+            griha_pravesh: 'गृह प्रवेश (House Warming)',
+            janai: 'जनै',
+            annaprashan: 'अन्नप्राशन',
+            upanayan: 'उपनयन',
+            shradh: 'श्राद्ध',
+            other: 'अन्य'
+        };
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatDate(value) {
+            if (!value) return '—';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return value;
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function formatTime(value) {
+            return value ? value.substring(0, 5) : '—';
+        }
+
+        function getEventTypeLabel(value) {
+            return eventTypeLabels[value] || value || '—';
+        }
+
+        function getScheduleDetails(item) {
+            return [
+                ['Busy Date', formatDate(item.busy_date)],
+                ['Event Type', getEventTypeLabel(item.event_type)],
+                ['Event Title', item.event_title || '—'],
+                ['Start Time', formatTime(item.start_time)],
+                ['End Time', formatTime(item.end_time)],
+                ['Location', item.location || '—'],
+                ['Contact Person', item.contact_person || '—'],
+                ['Phone Number', item.phone_number || '—'],
+                ['Notes', item.notes || '—']
+            ];
+        }
+
+        function renderDetailContent(item) {
+            document.getElementById('detail-content').innerHTML = getScheduleDetails(item).map(([label, value]) => `
+                <div class="detail-item">
+                    <div class="detail-label">${escapeHtml(label)}</div>
+                    <div class="detail-value">${escapeHtml(value)}</div>
+                </div>
+            `).join('');
+        }
 
         function checkAccess() {
             if (!isLoggedIn()) {
@@ -319,20 +476,25 @@
         }
 
         function renderSchedule() {
-            const html = scheduleData.map(item => `
+            const html = scheduleData.map((item, index) => `
                 <div class="schedule-card">
                     <div>
-                        <div class="schedule-date">${new Date(item.busy_date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})}</div>
+                        <div class="schedule-date">${escapeHtml(formatDate(item.busy_date))}</div>
                         <div class="schedule-event">
-                            <strong>${item.event_title}</strong><br>
-                            ${item.start_time ? `⏰ ${item.start_time.substring(0,5)} - ${item.end_time.substring(0,5)}` : ''}<br>
-                            📍 ${item.location}
+                            <strong>${escapeHtml(item.event_title || 'Untitled event')}</strong><br>
+                            Type: ${escapeHtml(getEventTypeLabel(item.event_type))}<br>
+                            ${item.start_time || item.end_time ? `Time: ${escapeHtml(formatTime(item.start_time))} - ${escapeHtml(formatTime(item.end_time))}` : 'Time: —'}<br>
+                            Location: ${escapeHtml(item.location || '—')}<br>
+                            Contact: ${escapeHtml(item.contact_person || '—')}<br>
+                            Phone: ${escapeHtml(item.phone_number || '—')}
                         </div>
-                        ${item.notes ? `<div class="schedule-event mt-2">📝 ${item.notes}</div>` : ''}
+                        <button type="button" class="schedule-notes-link mt-2" data-action="detail" data-index="${index}">
+                            ${escapeHtml(item.notes ? `Notes: ${item.notes}` : 'View full schedule details')}
+                        </button>
                     </div>
                     <div class="schedule-actions">
-                        <button class="btn btn-sm btn-outline-warning btn-edit" onclick="editSchedule(${item.id}, '${item.event_title}', '${item.notes}')">Edit</button>
-                        <button class="btn btn-sm btn-outline-danger btn-delete" onclick="deleteSchedule(${item.id})">Delete</button>
+                        <button class="btn btn-sm btn-outline-warning btn-edit" data-action="edit" data-index="${index}">Edit</button>
+                        <button class="btn btn-sm btn-outline-danger btn-delete" data-action="delete" data-id="${item.id}">Delete</button>
                     </div>
                 </div>
             `).join('');
@@ -340,6 +502,22 @@
             document.getElementById('schedule-list').innerHTML = html;
             document.getElementById('no-schedule').style.display = 'none';
         }
+
+        document.getElementById('schedule-list').addEventListener('click', (event) => {
+            const button = event.target.closest('[data-action]');
+            if (!button) return;
+
+            const action = button.dataset.action;
+            const index = button.dataset.index;
+
+            if (action === 'detail' && index !== undefined) {
+                showScheduleDetail(scheduleData[Number(index)]);
+            } else if (action === 'edit' && index !== undefined) {
+                editSchedule(scheduleData[Number(index)]);
+            } else if (action === 'delete') {
+                deleteSchedule(Number(button.dataset.id));
+            }
+        });
 
         function showNoSchedule() {
             document.getElementById('schedule-list').innerHTML = '';
@@ -383,7 +561,6 @@
 
                 if (res.ok) {
                     showSuccess('✓ Event added to schedule!');
-                    // Clear form
                     document.getElementById('busy_date').value = '';
                     document.getElementById('event_title').value = '';
                     document.getElementById('start_time').value = '';
@@ -402,15 +579,46 @@
             }
         }
 
-        function editSchedule(id, title, notes) {
-            currentEditingId = id;
-            document.getElementById('edit_event_title').value = title;
-            document.getElementById('edit_notes').value = notes;
+        function editSchedule(item) {
+            currentEditingId = item.id;
+            document.getElementById('edit_busy_date').value = item.busy_date || '';
+            document.getElementById('edit_event_type').value = item.event_type || 'other';
+            document.getElementById('edit_event_title').value = item.event_title || '';
+            document.getElementById('edit_start_time').value = item.start_time ? item.start_time.substring(0, 5) : '';
+            document.getElementById('edit_end_time').value = item.end_time ? item.end_time.substring(0, 5) : '';
+            document.getElementById('edit_location').value = item.location || '';
+            document.getElementById('edit_contact_person').value = item.contact_person || '';
+            document.getElementById('edit_phone_number').value = item.phone_number || '';
+            document.getElementById('edit_notes').value = item.notes || '';
             new bootstrap.Modal(document.getElementById('editModal')).show();
         }
 
+        function showScheduleDetail(item) {
+            currentDetailItem = item;
+            renderDetailContent(item);
+            new bootstrap.Modal(document.getElementById('detailModal')).show();
+        }
+
+        function editCurrentDetail() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('detailModal'));
+            if (modal) {
+                modal.hide();
+            }
+
+            if (currentDetailItem) {
+                editSchedule(currentDetailItem);
+            }
+        }
+
         async function saveEdit() {
+            const busy_date = document.getElementById('edit_busy_date').value;
+            const event_type = document.getElementById('edit_event_type').value;
             const event_title = document.getElementById('edit_event_title').value;
+            const start_time = document.getElementById('edit_start_time').value;
+            const end_time = document.getElementById('edit_end_time').value;
+            const location = document.getElementById('edit_location').value;
+            const contact_person = document.getElementById('edit_contact_person').value;
+            const phone_number = document.getElementById('edit_phone_number').value;
             const notes = document.getElementById('edit_notes').value;
 
             try {
@@ -420,7 +628,17 @@
                         "Authorization": `Bearer ${getToken()}`,
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ event_title, notes })
+                    body: JSON.stringify({
+                        busy_date,
+                        event_type,
+                        event_title,
+                        start_time: start_time || null,
+                        end_time: end_time || null,
+                        location,
+                        contact_person,
+                        phone_number,
+                        notes
+                    })
                 });
 
                 if (res.ok) {
