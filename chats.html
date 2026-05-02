@@ -253,7 +253,177 @@
             </div>
         </div>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let chatsData = [];
+        let selectedChatId = null;
 
+        if (!isLoggedIn()) {
+            window.location.href = 'login.html';
+        }
+
+        async function loadChats() {
+            try {
+                const res = await fetch(`${BASE_URL}/chats/`, {
+                    headers: { "Authorization": `Bearer ${getToken()}` }
+                });
+                const data = await res.json();
+
+                document.getElementById('chats-loading').style.display = 'none';
+
+                chatsData = data.results || data;
+                
+                if (!Array.isArray(chatsData) || chatsData.length === 0) {
+                    document.getElementById('no-chats').style.display = 'block';
+                    return;
+                }
+
+                const html = chatsData.map(chat => `
+                    <div class="chat-item" onclick="selectChat(${chat.id})">
+                        <div class="chat-item-info">
+                            <div class="chat-item-name">${chat.purohit_username}</div>
+                            <div class="chat-item-preview">${chat.last_message ? chat.last_message.message_text.substring(0, 30) + '...' : 'No messages yet'}</div>
+                        </div>
+                        ${chat.unread_count > 0 ? `<div class="unread-badge">${chat.unread_count}</div>` : ''}
+                    </div>
+                `).join('');
+
+                document.getElementById('chats-list').innerHTML = html;
+
+                const params = new URLSearchParams(window.location.search);
+                const priestId = params.get('priest_id');
+                if (priestId) {
+                    startNewChat(priestId);
+                }
+
+            } catch (err) {
+                console.error('Error loading chats:', err);
+                document.getElementById('chats-loading').style.display = 'none';
+            }
+        }
+
+        async function selectChat(chatId) {
+            selectedChatId = chatId;
+            const chat = chatsData.find(c => c.id === chatId);
+
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.chat-item').classList.add('active');
+
+            document.getElementById('no-chat-selected').style.display = 'none';
+            document.getElementById('chat-content').style.display = 'flex';
+
+            document.getElementById('chat-header').innerHTML = `
+                <h5>${chat.purohit_username}</h5>
+            `;
+
+            await loadMessages(chatId);
+
+            await markMessagesRead(chatId);
+        }
+
+        async function loadMessages(chatId) {
+            try {
+                const res = await fetch(`${BASE_URL}/chats/${chatId}/messages/`, {
+                    headers: { "Authorization": `Bearer ${getToken()}` }
+                });
+                const data = await res.json();
+
+                const messages = data.results || data;
+                const messagesHtml = messages.map(msg => {
+                    const isOwn = msg.sender_username === getUsername();
+                    const time = new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                    return `
+                        <div class="message ${isOwn ? 'own' : 'other'}">
+                            <div class="message-bubble">${msg.message_text}</div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.getElementById('messages-area').innerHTML = messagesHtml;
+                document.getElementById('messages-area').scrollTop = document.getElementById('messages-area').scrollHeight;
+            } catch (err) {
+                console.error('Error loading messages:', err);
+            }
+        }
+
+        async function sendMessage() {
+            const text = document.getElementById('message-input').value.trim();
+            if (!text || !selectedChatId) return;
+
+            try {
+                const res = await fetch(`${BASE_URL}/chats/${selectedChatId}/messages/`, {
+                    method: 'POST',
+                    headers: {
+                        "Authorization": `Bearer ${getToken()}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ message_text: text })
+                });
+
+                if (res.ok) {
+                    document.getElementById('message-input').value = '';
+                    await loadMessages(selectedChatId);
+                }
+            } catch (err) {
+                console.error('Error sending message:', err);
+            }
+        }
+
+        async function markMessagesRead(chatId) {
+            try {
+                await fetch(`${BASE_URL}/chats/${chatId}/mark-read/`, {
+                    method: 'PUT',
+                    headers: { "Authorization": `Bearer ${getToken()}` }
+                });
+            } catch (err) {
+                console.error('Error marking as read:', err);
+            }
+        }
+
+        async function startNewChat(priestId) {
+            try {
+                const res = await fetch(`${BASE_URL}/chats/start/`, {
+                    method: 'POST',
+                    headers: {
+                        "Authorization": `Bearer ${getToken()}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ purohit_id: priestId })
+                });
+
+                if (res.ok) {
+                    const chat = await res.json();
+                    loadChats();  // Reload to show new chat
+                }
+            } catch (err) {
+                console.error('Error starting chat:', err);
+            }
+        }
+
+        function getUsername() {
+            return localStorage.getItem('username') || 'user';
+        }
+
+        setInterval(() => {
+            if (selectedChatId) {
+                loadMessages(selectedChatId);
+            }
+        }, 2000);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('message-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+
+        loadChats();
+    </script>
 
 </body>
 </html>
