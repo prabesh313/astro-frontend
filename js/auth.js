@@ -23,15 +23,11 @@ function updateNavbar(){
     const logoutlink=document.getElementById("nav-logout");
     const kundaliLink = document.getElementById("nav-kundali");
 
-    if(loggedIn){
-        loginLink.style.display="none";
-        logoutlink.style.display="block";
-        kundaliLink.style.display="block";
-    }else{
-        loginLink.style.display="block";
-        logoutlink.style.display="none";
-        kundaliLink.style.display="none";
-    }
+
+    if (loginLink) loginLink.style.display = loggedIn ? "none" : "block";
+    if (logoutlink) logoutlink.style.display = loggedIn ? "block" : "none";
+    if (kundaliLink) kundaliLink.style.display = loggedIn ? "block" : "none";
+
 }
 
 document.addEventListener("DOMContentLoaded",updateNavbar);
