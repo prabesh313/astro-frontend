@@ -69,9 +69,9 @@
             console.log(res.status, data);
 
             if (res.ok) {
-                successDiv.textContent = "Account created! Redirecting to login...";
+                successDiv.textContent = "Account created! Please create your profile...";
                 successDiv.classList.remove("d-none");
-                setTimeout(() => window.location.href = "login.html", 1500);
+                setTimeout(() => window.location.href = "profile.html", 2000);
             } else {
                 errorDiv.textContent = JSON.stringify(data);
                 errorDiv.classList.remove("d-none");
