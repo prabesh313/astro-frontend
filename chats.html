@@ -12,83 +12,102 @@
             grid-template-columns: 300px 1fr;
             gap: 0;
             height: calc(100vh - 120px);
-            max-height: 600px;
+            max-height: 650px;
+            border: 1px solid var(--color-border-tertiary, #e8d5b7);
+            border-radius: 10px;
+            overflow: hidden;
         }
 
+        /* ── Left sidebar ── */
         .chats-list {
-            border-right: 1px solid var(--color-border-tertiary);
+            border-right: 1px solid var(--color-border-tertiary, #e8d5b7);
             overflow-y: auto;
+            background: var(--color-background-primary, #fff);
+        }
+
+        .chats-list-header {
+            padding: 14px 16px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #8B0000;
+            border-bottom: 1px solid var(--color-border-tertiary, #e8d5b7);
+            background: #fff8f0;
         }
 
         .chat-item {
-            padding: 12px;
-            border-bottom: 0.5px solid var(--color-border-tertiary);
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--color-border-tertiary, #f0e8dc);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.15s;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 10px;
         }
-
-        .chat-item:hover {
-            background: var(--color-background-secondary);
-        }
-
+        .chat-item:hover { background: #fdf5ee; }
         .chat-item.active {
-            background: #fff8f0;
+            background: #fff0e0;
             border-left: 3px solid #8B0000;
         }
 
-        .chat-item-info {
-            flex: 1;
+        .chat-item-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f5e6c8, #e8c98a);
+            border: 2px solid #c8a951;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            overflow: hidden;
         }
+        .chat-item-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
+        .chat-item-info { flex: 1; min-width: 0; }
         .chat-item-name {
-            font-weight: 600;
-            color: #8B0000;
-            font-size: 13px;
+            font-weight: 600; color: #8B0000; font-size: 13px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-
         .chat-item-preview {
             font-size: 12px;
-            color: var(--color-text-secondary);
+            color: var(--color-text-secondary, #8a7060);
             margin-top: 2px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-
+        .chat-item-meta {
+            display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;
+        }
+        .chat-item-time { font-size: 10px; color: var(--color-text-secondary, #aaa); }
         .unread-badge {
-            background: #8B0000;
-            color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
+            background: #8B0000; color: white;
+            border-radius: 50%; width: 20px; height: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
         }
 
+        /* ── Right chat area ── */
         .chat-area {
             display: flex;
             flex-direction: column;
+            background: var(--color-background-primary, #fff);
         }
 
         .chat-header {
             background: linear-gradient(135deg, #8B0000, #c0392b);
             color: white;
-            padding: 16px;
+            padding: 14px 16px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
         }
-
-        .chat-header h5 {
-            margin: 0;
-            font-weight: 700;
+        .chat-header-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; overflow: hidden; flex-shrink: 0;
         }
+        .chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .chat-header-info h5 { margin: 0; font-size: 15px; font-weight: 700; }
+        .chat-header-info small { font-size: 11px; opacity: 0.8; }
 
         .messages-area {
             flex: 1;
@@ -96,111 +115,80 @@
             padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            background: #fdf8f2;
         }
 
-        .message {
-            display: flex;
-            gap: 8px;
-            align-items: flex-end;
-        }
-
-        .message.own {
-            justify-content: flex-end;
-        }
+        .message { display: flex; gap: 8px; align-items: flex-end; }
+        .message.own { justify-content: flex-end; }
 
         .message-bubble {
             max-width: 60%;
-            padding: 10px 14px;
+            padding: 9px 13px;
             border-radius: 12px;
             font-size: 13px;
             line-height: 1.5;
+            word-break: break-word;
         }
-
         .message.other .message-bubble {
-            background: var(--color-background-secondary);
-            color: var(--color-text-primary);
+            background: #fff;
+            color: #2c1a0e;
+            border: 1px solid #e8d5b7;
+            border-bottom-left-radius: 3px;
         }
-
         .message.own .message-bubble {
             background: #8B0000;
             color: white;
+            border-bottom-right-radius: 3px;
         }
 
-        .message-time {
-            font-size: 11px;
-            color: var(--color-text-tertiary);
+        .message-meta {
+            display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
         }
+        .message.other .message-meta { align-items: flex-start; }
+        .message-time { font-size: 10px; color: #aaa; }
+        .message-read { font-size: 10px; color: #8B0000; }
 
         .chat-input-area {
             padding: 12px;
-            border-top: 1px solid var(--color-border-tertiary);
+            border-top: 1px solid var(--color-border-tertiary, #e8d5b7);
             display: flex;
             gap: 8px;
+            background: #fff;
+            flex-shrink: 0;
         }
-
         .chat-input-area input {
-            flex: 1;
-            padding: 10px;
-            border: 0.5px solid var(--color-border-tertiary);
-            border-radius: 6px;
-            font-size: 13px;
+            flex: 1; padding: 10px 14px;
+            border: 1px solid var(--color-border-tertiary, #e8d5b7);
+            border-radius: 20px; font-size: 13px; outline: none;
         }
-
+        .chat-input-area input:focus { border-color: #8B0000; }
         .chat-input-area button {
-            background: #8B0000;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
+            background: #8B0000; color: white; border: none;
+            padding: 10px 20px; border-radius: 20px;
+            font-weight: 600; cursor: pointer; transition: background 0.2s;
         }
-
-        .chat-input-area button:hover {
-            background: #c0392b;
-        }
+        .chat-input-area button:hover { background: #c0392b; }
 
         .no-chat-selected {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: var(--color-text-secondary);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100%; color: var(--color-text-secondary, #8a7060);
+            gap: 8px;
         }
+        .no-chat-selected span { font-size: 40px; }
 
-        .no-chats {
-            padding: 20px;
-            text-align: center;
-            color: var(--color-text-secondary);
-        }
-
-        .loading-chats {
-            padding: 20px;
-            text-align: center;
-        }
+        .no-chats { padding: 20px; text-align: center; color: var(--color-text-secondary, #8a7060); font-size: 13px; }
+        .loading-chats { padding: 20px; text-align: center; }
 
         @media (max-width: 768px) {
-            .chats-container {
-                grid-template-columns: 1fr;
-                max-height: none;
-                height: auto;
-            }
-
-            .chats-list {
-                border-right: none;
-                border-bottom: 1px solid var(--color-border-tertiary);
-                max-height: 200px;
-            }
-
-            .message-bubble {
-                max-width: 80%;
-            }
+            .chats-container { grid-template-columns: 1fr; max-height: none; height: auto; }
+            .chats-list { border-right: none; border-bottom: 1px solid var(--color-border-tertiary); max-height: 220px; }
+            .message-bubble { max-width: 80%; }
         }
     </style>
 </head>
 <body>
-
     <nav class="navbar navbar-dark navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="index.html">Astro</a>
@@ -212,41 +200,42 @@
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
                     <li class="nav-item"><a class="nav-link" href="rituals.html">Rituals</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="kundali.html" id="nav-kundali">Kundali</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="kundali.html">Kundali</a></li>
                     <li class="nav-item"><a class="nav-link" href="priests-list.html">Priests</a></li>
                     <li class="nav-item"><a class="nav-link" href="schedule.html">Schedule</a></li>
                     <li class="nav-item"><a class="nav-link active" href="chats.html">Chats</a></li>
                     <li class="nav-item"><a class="nav-link active" href="profile.html">Profile</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h2 class="section-title"> Messages</h2>
+        <h2 class="section-title">💬 Messages</h2>
 
         <div class="chats-container">
+            <!-- Left: conversation list -->
             <div class="chats-list">
+                <div class="chats-list-header">Conversations</div>
                 <div id="chats-loading" class="loading-chats">
                     <div class="spinner-border spinner-border-sm text-danger"></div>
                 </div>
                 <div id="chats-list"></div>
                 <div id="no-chats" class="no-chats" style="display:none">
                     <p>No conversations yet</p>
-                    <p><a href="priests-list.html">Start a conversation</a></p>
+                    <a href="priests-list.html" style="color:#8B0000;">Find a Purohit</a>
                 </div>
             </div>
 
-
+            <!-- Right: message area -->
             <div class="chat-area">
                 <div id="no-chat-selected" class="no-chat-selected">
-                    Select a conversation to start
+                    <span>💬</span>
+                    <p>Select a conversation to start</p>
                 </div>
 
-                <div id="chat-content" style="display:none; display:flex; flex-direction:column; height:100%">
+                <div id="chat-content" style="display:none; flex-direction:column; height:100%">
                     <div class="chat-header" id="chat-header"></div>
                     <div class="messages-area" id="messages-area"></div>
                     <div class="chat-input-area">
@@ -264,44 +253,64 @@
     <script>
         let chatsData = [];
         let selectedChatId = null;
+        let pollInterval = null;
 
-        if (!isLoggedIn()) {
-            window.location.href = 'login.html';
-        }
+        if (!isLoggedIn()) window.location.href = 'login.html';
 
+        /* ── Load conversation list ── */
         async function loadChats() {
             try {
                 const res = await fetch(`${BASE_URL}/chats/`, {
                     headers: { "Authorization": `Bearer ${getToken()}` }
                 });
                 const data = await res.json();
-
                 document.getElementById('chats-loading').style.display = 'none';
 
                 chatsData = data.results || data;
-                
+
                 if (!Array.isArray(chatsData) || chatsData.length === 0) {
                     document.getElementById('no-chats').style.display = 'block';
                     return;
                 }
 
-                const html = chatsData.map(chat => `
-                    <div class="chat-item" onclick="selectChat(${chat.id})">
+                document.getElementById('no-chats').style.display = 'none';
+
+                const html = chatsData.map(chat => {
+                    // support both old field names and new ones
+                    const name = chat.other_username || chat.purohit_username || 'Unknown';
+                    const profile = chat.other_user_profile || chat.purohit_profile || {};
+                    const avatarInner = profile.profile_image
+                        ? `<img src="${profile.profile_image}" alt="${name}">`
+                        : `🧑`;
+                    const preview = chat.last_message
+                        ? chat.last_message.message_text.substring(0, 35) + '...'
+                        : 'No messages yet';
+                    const time = chat.last_message
+                        ? new Date(chat.last_message.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+                        : '';
+
+                    return `
+                    <div class="chat-item" id="chat-item-${chat.id}" onclick="selectChat(${chat.id}, this)">
+                        <div class="chat-item-avatar">${avatarInner}</div>
                         <div class="chat-item-info">
-                            <div class="chat-item-name">${chat.purohit_username}</div>
-                            <div class="chat-item-preview">${chat.last_message ? chat.last_message.message_text.substring(0, 30) + '...' : 'No messages yet'}</div>
+                            <div class="chat-item-name">${name}</div>
+                            <div class="chat-item-preview">${preview}</div>
                         </div>
-                        ${chat.unread_count > 0 ? `<div class="unread-badge">${chat.unread_count}</div>` : ''}
-                    </div>
-                `).join('');
+                        <div class="chat-item-meta">
+                            <div class="chat-item-time">${time}</div>
+                            ${chat.unread_count > 0 ? `<div class="unread-badge">${chat.unread_count}</div>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
 
                 document.getElementById('chats-list').innerHTML = html;
 
+                // auto-open if redirected from priests-list
                 const params = new URLSearchParams(window.location.search);
-                const priestId = params.get('priest_id');
-                if (priestId) {
-                    startNewChat(priestId);
-                }
+                const userId = params.get('priest_id')  // support both query param styles
+                if (userId)
+                    console.log('Starting chat with user_id:', userId); 
+                    await startNewChat(userId);
 
             } catch (err) {
                 console.error('Error loading chats:', err);
@@ -309,55 +318,91 @@
             }
         }
 
-        async function selectChat(chatId) {
+        /* ── Select a conversation ── */
+        async function selectChat(chatId, el) {
             selectedChatId = chatId;
             const chat = chatsData.find(c => c.id === chatId);
 
-            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
-            event.target.closest('.chat-item').classList.add('active');
+            // highlight active
+            document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+            (el || document.getElementById(`chat-item-${chatId}`)).classList.add('active');
 
+            // show chat panel
             document.getElementById('no-chat-selected').style.display = 'none';
-            document.getElementById('chat-content').style.display = 'flex';
+            const chatContent = document.getElementById('chat-content');
+            chatContent.style.display = 'flex';
+
+            // set header
+            const name = chat.other_username || chat.purohit_username || 'Unknown';
+            const profile = chat.other_user_profile || chat.purohit_profile || {};
+            const avatarInner = profile.profile_image
+                ? `<img src="${profile.profile_image}" alt="${name}">`
+                : `🧑`;
+            const userType = profile.user_type ? `<small>${profile.user_type}</small>` : '';
 
             document.getElementById('chat-header').innerHTML = `
-                <h5>${chat.purohit_username}</h5>
+                <div class="chat-header-avatar">${avatarInner}</div>
+                <div class="chat-header-info">
+                    <h5>${profile.full_name || name}</h5>
+                    ${userType}
+                </div>
             `;
 
             await loadMessages(chatId);
-
             await markMessagesRead(chatId);
+
+            // remove unread badge
+            const badge = document.querySelector(`#chat-item-${chatId} .unread-badge`);
+            if (badge) badge.remove();
         }
 
+        /* ── Select by id (after startNewChat) ── */
+        function selectChatById(chatId) {
+            const el = document.getElementById(`chat-item-${chatId}`);
+            if (el) selectChat(chatId, el);
+        }
+
+        /* ── Load messages ── */
         async function loadMessages(chatId) {
             try {
                 const res = await fetch(`${BASE_URL}/chats/${chatId}/messages/`, {
                     headers: { "Authorization": `Bearer ${getToken()}` }
                 });
                 const data = await res.json();
-
                 const messages = data.results || data;
-                const messagesHtml = messages.map(msg => {
-                    const isOwn = msg.sender_username === getUsername();
+
+                const currentUsername = getUsername();
+                const html = messages.map(msg => {
+                    const isOwn = msg.sender_username === currentUsername;
                     const time = new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                    const readTick = isOwn
+                        ? `<span class="message-read">${msg.is_read ? '✓✓' : '✓'}</span>`
+                        : '';
                     return `
                         <div class="message ${isOwn ? 'own' : 'other'}">
                             <div class="message-bubble">${msg.message_text}</div>
-                            <div class="message-time">${time}</div>
-                        </div>
-                    `;
+                            <div class="message-meta">
+                                <div class="message-time">${time}</div>
+                                ${readTick}
+                            </div>
+                        </div>`;
                 }).join('');
 
-                document.getElementById('messages-area').innerHTML = messagesHtml;
-                document.getElementById('messages-area').scrollTop = document.getElementById('messages-area').scrollHeight;
+                const area = document.getElementById('messages-area');
+                area.innerHTML = html || '<div style="text-align:center;color:#aaa;font-size:13px;padding:20px;">No messages yet. Say hello! 👋</div>';
+                area.scrollTop = area.scrollHeight;
             } catch (err) {
                 console.error('Error loading messages:', err);
             }
         }
 
+        /* ── Send message ── */
         async function sendMessage() {
-            const text = document.getElementById('message-input').value.trim();
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
             if (!text || !selectedChatId) return;
 
+            input.value = '';
             try {
                 const res = await fetch(`${BASE_URL}/chats/${selectedChatId}/messages/`, {
                     method: 'POST',
@@ -367,16 +412,13 @@
                     },
                     body: JSON.stringify({ message_text: text })
                 });
-
-                if (res.ok) {
-                    document.getElementById('message-input').value = '';
-                    await loadMessages(selectedChatId);
-                }
+                if (res.ok) await loadMessages(selectedChatId);
             } catch (err) {
                 console.error('Error sending message:', err);
             }
         }
 
+        /* ── Mark as read ── */
         async function markMessagesRead(chatId) {
             try {
                 await fetch(`${BASE_URL}/chats/${chatId}/mark-read/`, {
@@ -388,7 +430,8 @@
             }
         }
 
-        async function startNewChat(priestId) {
+        /* ── Start new chat (from priests-list redirect) ── */
+        async function startNewChat(userId) {
             try {
                 const res = await fetch(`${BASE_URL}/chats/start/`, {
                     method: 'POST',
@@ -396,12 +439,12 @@
                         "Authorization": `Bearer ${getToken()}`,
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ purohit_id: priestId })
+                    body: JSON.stringify({ user_id: userId })  // ← matches updated StartChatView
                 });
-
                 if (res.ok) {
                     const chat = await res.json();
-                    loadChats();
+                    await loadChats();
+                    selectChatById(chat.id);
                 }
             } catch (err) {
                 console.error('Error starting chat:', err);
@@ -409,25 +452,27 @@
         }
 
         function getUsername() {
-            return localStorage.getItem('username') || 'user';
+            return localStorage.getItem('username') || '';
         }
 
+        /* ── Poll for new messages every 3s ── */
         setInterval(() => {
-            if (selectedChatId) {
-                loadMessages(selectedChatId);
-            }
-        }, 2000);
+            if (selectedChatId) loadMessages(selectedChatId);
+        }, 3000);
 
+        /* ── Poll chat list every 10s for new unread counts ── */
+        setInterval(() => {
+            loadChats();
+        }, 10000);
+
+        /* ── Enter key to send ── */
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('message-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
+            document.getElementById('message-input').addEventListener('keypress', e => {
+                if (e.key === 'Enter') sendMessage();
             });
         });
 
         loadChats();
     </script>
-
 </body>
 </html>

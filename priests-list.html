@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        
         .priest-row {
             background: var(--color-background-primary, #fff);
             border: 1px solid var(--color-border-tertiary, #e8d5b7);
@@ -19,77 +18,35 @@
             gap: 14px;
             transition: box-shadow 0.2s, border-radius 0.1s;
         }
-        .priest-row:hover {
-            box-shadow: 0 3px 12px rgba(139,0,0,0.12);
-        }
+        .priest-row:hover { box-shadow: 0 3px 12px rgba(139,0,0,0.12); }
         .priest-row.expanded {
             border-radius: 10px 10px 0 0;
             border-bottom-color: transparent;
         }
-
-        
         .priest-avatar {
-            width: 52px;
-            height: 52px;
+            width: 52px; height: 52px;
             border-radius: 50%;
             background: linear-gradient(135deg, #f5e6c8, #e8c98a);
             border: 2px solid #c8a951;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            flex-shrink: 0;
-            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; flex-shrink: 0; overflow: hidden;
         }
-        .priest-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        
-        .priest-main {
-            flex: 1;
-            min-width: 0;
-        }
+        .priest-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .priest-main { flex: 1; min-width: 0; }
         .priest-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: #8B0000;
-            cursor: pointer;
-            display: block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 15px; font-weight: 700; color: #8B0000;
+            cursor: pointer; display: block;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .priest-name:hover {
-            text-decoration: underline;
-        }
-        .priest-sub {
-            font-size: 12px;
-            color: var(--color-text-secondary, #8a7060);
-            margin-top: 2px;
-        }
-
-
+        .priest-name:hover { text-decoration: underline; }
+        .priest-sub { font-size: 12px; color: var(--color-text-secondary, #8a7060); margin-top: 2px; }
         .btn-chat {
-            background: #8B0000;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            flex-shrink: 0;
-            transition: background 0.2s;
+            background: #8B0000; color: white; border: none;
+            padding: 8px 16px; border-radius: 6px;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            white-space: nowrap; flex-shrink: 0; transition: background 0.2s;
         }
-        .btn-chat:hover {
-            background: #c0392b;
-        }
-
+        .btn-chat:hover { background: #c0392b; }
         .detail-panel {
             display: none;
             background: #fff8f0;
@@ -97,138 +54,59 @@
             border-top: none;
             border-radius: 0 0 10px 10px;
             padding: 16px 20px;
-            margin-top: -10px;  /* overlap with row's bottom margin */
+            margin-top: -10px;
             margin-bottom: 10px;
             animation: slideDown 0.22s ease;
         }
-        .detail-panel.open {
-            display: block;
-        }
+        .detail-panel.open { display: block; }
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-6px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-
-
-        .dp-top {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 14px;
-        }
+        .dp-top { display: flex; gap: 16px; margin-bottom: 14px; }
         .dp-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 8px;
+            width: 72px; height: 72px; border-radius: 8px;
             background: linear-gradient(135deg, #f5e6c8, #e8c98a);
             border: 2px solid #c8a951;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            flex-shrink: 0;
-            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px; flex-shrink: 0; overflow: hidden;
         }
-        .dp-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-        .dp-info h4 {
-            color: #8B0000;
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .dp-info p {
-            font-size: 13px;
-            color: var(--color-text-secondary, #8a7060);
-            margin: 2px 0;
-        }
-
+        .dp-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+        .dp-info h4 { color: #8B0000; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+        .dp-info p { font-size: 13px; color: var(--color-text-secondary, #8a7060); margin: 2px 0; }
         .dp-bio {
-            font-style: italic;
-            font-size: 13px;
-            color: #5a4030;
-            border-left: 3px solid #c8a951;
-            padding-left: 10px;
-            margin-bottom: 12px;
+            font-style: italic; font-size: 13px; color: #5a4030;
+            border-left: 3px solid #c8a951; padding-left: 10px; margin-bottom: 12px;
         }
-
-        .dp-section {
-            margin-bottom: 10px;
-        }
+        .dp-section { margin-bottom: 10px; }
         .dp-label {
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 11px; font-weight: 700;
             color: var(--color-text-secondary, #8a7060);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 5px;
+            text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px;
         }
-        .dp-spec {
-            background: #fff3e0;
-            border-radius: 5px;
-            padding: 8px 10px;
-            font-size: 13px;
-        }
-
-
-        .busy-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
+        .dp-spec { background: #fff3e0; border-radius: 5px; padding: 8px 10px; font-size: 13px; }
+        .busy-badges { display: flex; flex-wrap: wrap; gap: 6px; }
         .busy-badge {
-            background: #ffe0e0;
-            color: #8B0000;
+            background: #ffe0e0; color: #8B0000;
             border: 1px solid #f5c0c0;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
+            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
         }
         .no-busy-dates {
-            background: #d4edda;
-            color: #155724;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            display: inline-block;
+            background: #d4edda; color: #155724;
+            padding: 6px 12px; border-radius: 6px; font-size: 12px; display: inline-block;
         }
-
-
         .verified-badge {
-            display: inline-block;
-            background: #d4edda;
-            color: #155724;
-            padding: 2px 7px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-left: 6px;
-            font-style: normal;
+            display: inline-block; background: #d4edda; color: #155724;
+            padding: 2px 7px; border-radius: 4px;
+            font-size: 11px; font-weight: 700; margin-left: 6px; font-style: normal;
         }
-
         .filters-section {
             background: var(--color-background-secondary, #f8f0e4);
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 16px; border-radius: 8px; margin-bottom: 20px;
         }
-
-        .loading-spinner {
-            text-align: center;
-            padding: 2rem;
-        }
-        .spinner-border {
-            color: #8B0000;
-        }
-        .no-priests {
-            text-align: center;
-            padding: 2rem;
-            color: var(--color-text-secondary, #8a7060);
-        }
+        .loading-spinner { text-align: center; padding: 2rem; }
+        .spinner-border { color: #8B0000; }
+        .no-priests { text-align: center; padding: 2rem; color: var(--color-text-secondary, #8a7060); }
     </style>
 </head>
 <body>
@@ -258,9 +136,12 @@
         <h2 class="section-title"> Find Purohit</h2>
 
         <div class="filters-section">
-            <div class="row">
-                <div class="col-md-9">
-                    <input type="text" id="search-input" class="form-control" placeholder="Search by name, specialization..." onkeyup="handleSearchKey(event)">
+            <div class="row g-2">
+                <div class="col-md-5">
+                    <input type="text" id="search-input" class="form-control" placeholder="Search by name or specialization..." onkeyup="handleSearchKey(event)">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="location-input" class="form-control" placeholder="Filter by location"onkeyup="handleSearchKey(event)">
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-danger w-100" onclick="searchPriests()">Search</button>
@@ -287,15 +168,18 @@
     <script src="js/auth.js"></script>
     <script>
 
-
-        async function loadPriests(search = '') {
+        async function loadPriests(search = '', address = '') {
             document.getElementById('loading').style.display = 'block';
             document.getElementById('priests-list').innerHTML = '';
             document.getElementById('no-priests').style.display = 'none';
 
             try {
-                let url = `${BASE_URL}/priests/`;
-                if (search) url += `?search=${encodeURIComponent(search)}`;
+                const params = new URLSearchParams();
+                if (search)  params.append('search', search);
+                if (address) params.append('address', address);
+
+                const queryString = params.toString();
+                const url = `${BASE_URL}/priests/${queryString ? '?' + queryString : ''}`;
 
                 const res  = await fetch(url);
                 const data = await res.json();
@@ -309,17 +193,13 @@
                 }
 
                 const html = priests.map(priest => {
-                    const avatarInner = priest.profile_picture
-                        ? `<img src="${priest.profile_picture}" alt="${priest.full_name}">`
-                        : `🧑‍🩳`;
-
-                    const firstName = priest.full_name.split(' ')[0];
+                    const avatarInner = priest.profile_image
+                        ? `<img src="${priest.profile_image}" alt="${priest.full_name}">`
+                        : `🧑`;
 
                     return `
-                    <!-- Compact row -->
                     <div class="priest-row" id="row-${priest.id}">
                         <div class="priest-avatar">${avatarInner}</div>
-
                         <div class="priest-main">
                             <span class="priest-name" onclick="toggleDetail(${priest.id})">
                                 ${priest.full_name}
@@ -329,15 +209,12 @@
                                 ⭐ ${priest.average_rating || 0}/5
                                 &nbsp;|&nbsp; ${priest.experience_years} yrs
                                 &nbsp;|&nbsp; NRs. ${priest.hourly_rate || 0}/hr
+                                ${priest.address ? `&nbsp;|&nbsp;  ${priest.address}` : ''}
                             </div>
                         </div>
-
-                        <button class="btn-chat" onclick="startChat(${priest.id})">
-                            💬 Chat
-                        </button>
+                        <button class="btn-chat" onclick="startChat(${priest.user_id})">💬 Chat</button>
                     </div>
 
-                    <!-- Expandable detail panel -->
                     <div class="detail-panel" id="detail-${priest.id}">
                         <div class="dp-top">
                             <div class="dp-avatar">${avatarInner}</div>
@@ -349,6 +226,7 @@
                                 <p> ${priest.average_rating || 0} / 5 &nbsp;(${priest.total_reviews || 0} reviews)</p>
                                 <p> ${priest.experience_years} years experience</p>
                                 <p> NRs. ${priest.hourly_rate || 0} / hour</p>
+                                ${priest.address ? `<p> ${priest.address}</p>` : ''}
                             </div>
                         </div>
 
@@ -370,7 +248,6 @@
                 }).join('');
 
                 document.getElementById('priests-list').innerHTML = html;
-
                 priests.forEach(priest => loadBusyDates(priest.id));
 
             } catch (err) {
@@ -397,6 +274,7 @@
             try {
                 const res  = await fetch(`${BASE_URL}/priests/${priestId}/busy-dates/`);
                 const data = await res.json();
+                console.log('Busy dates response for priest', priestId, data); 
 
                 const busyDates = data.busy_dates || [];
                 const container = document.getElementById(`busy-${priestId}`);
@@ -420,22 +298,24 @@
             }
         }
 
-
         function searchPriests() {
-            loadPriests(document.getElementById('search-input').value.trim());
+            const search  = document.getElementById('search-input').value.trim();
+            const address = document.getElementById('location-input').value.trim();
+            loadPriests(search, address);
         }
 
         function handleSearchKey(e) {
             if (e.key === 'Enter') searchPriests();
         }
 
-        function startChat(priestId) {
+        function startChat(priestUserId) {
             if (!isLoggedIn()) {
                 alert('Please login first');
                 window.location.href = 'login.html';
                 return;
             }
-            window.location.href = `chats.html?priest_id=${priestId}`;
+            console.log('Navigating to chat with priest user_id:', priestUserId);
+            window.location.href = `chats.html?priest_id=${priestUserId}`;
         }
 
         loadPriests();
