@@ -508,7 +508,7 @@
                     document.getElementById('stat-rating').textContent = (data.average_rating || 0).toFixed(1);
 
                     const badge = document.getElementById('verification-badge');
-                    badge.innerHTML = data.is_verified 
+                    badge.innerHTML = data.is_verified
                         ? '<span class="badge-verified">✓ Verified</span>'
                         : '<span class="badge-pending">⏳ Pending Verification</span>';
 

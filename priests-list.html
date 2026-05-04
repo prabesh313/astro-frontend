@@ -7,125 +7,211 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .priest-card {
-            background: var(--color-background-primary);
-            border: 0.5px solid var(--color-border-tertiary);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            transition: all 0.3s;
-        }
-
-        .priest-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-
-        .priest-header {
+        
+        .priest-row {
+            background: var(--color-background-primary, #fff);
+            border: 1px solid var(--color-border-tertiary, #e8d5b7);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
             display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
+            align-items: center;
+            gap: 14px;
+            transition: box-shadow 0.2s, border-radius 0.1s;
+        }
+        .priest-row:hover {
+            box-shadow: 0 3px 12px rgba(139,0,0,0.12);
+        }
+        .priest-row.expanded {
+            border-radius: 10px 10px 0 0;
+            border-bottom-color: transparent;
         }
 
-        .priest-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            background: #f0f0f0;
+        
+        .priest-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f5e6c8, #e8c98a);
+            border: 2px solid #c8a951;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 26px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .priest-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
-        .priest-info h5 {
-            color: #8B0000;
+        
+        .priest-main {
+            flex: 1;
+            min-width: 0;
+        }
+        .priest-name {
+            font-size: 15px;
             font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .priest-info p {
-            font-size: 13px;
-            color: var(--color-text-secondary);
-            margin: 2px 0;
-        }
-
-        .priest-specs {
-            background: #fff8f0;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-
-        .rating {
-            color: #e67e22;
-            font-weight: 600;
-        }
-
-        .busy-dates-section {
-            background: var(--color-background-secondary);
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-        }
-
-        .busy-dates-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-text-secondary);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .busy-dates-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .busy-date-badge {
-            background: #ffcccc;
             color: #8B0000;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            border: 0.5px solid #8B0000;
+            cursor: pointer;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-        .no-busy-dates {
-            background: #d4edda;
-            color: #155724;
-            padding: 8px 12px;
-            border-radius: 6px;
+        .priest-name:hover {
+            text-decoration: underline;
+        }
+        .priest-sub {
             font-size: 12px;
+            color: var(--color-text-secondary, #8a7060);
+            margin-top: 2px;
         }
 
-        .priest-actions {
-            display: flex;
-            gap: 8px;
-        }
 
         .btn-chat {
-            flex: 1;
             background: #8B0000;
             color: white;
             border: none;
-            padding: 10px;
+            padding: 8px 16px;
             border-radius: 6px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background 0.2s;
         }
-
         .btn-chat:hover {
             background: #c0392b;
         }
 
+        .detail-panel {
+            display: none;
+            background: #fff8f0;
+            border: 1px solid var(--color-border-tertiary, #e8d5b7);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 16px 20px;
+            margin-top: -10px;  /* overlap with row's bottom margin */
+            margin-bottom: 10px;
+            animation: slideDown 0.22s ease;
+        }
+        .detail-panel.open {
+            display: block;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+
+        .dp-top {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+        .dp-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f5e6c8, #e8c98a);
+            border: 2px solid #c8a951;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .dp-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .dp-info h4 {
+            color: #8B0000;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .dp-info p {
+            font-size: 13px;
+            color: var(--color-text-secondary, #8a7060);
+            margin: 2px 0;
+        }
+
+        .dp-bio {
+            font-style: italic;
+            font-size: 13px;
+            color: #5a4030;
+            border-left: 3px solid #c8a951;
+            padding-left: 10px;
+            margin-bottom: 12px;
+        }
+
+        .dp-section {
+            margin-bottom: 10px;
+        }
+        .dp-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--color-text-secondary, #8a7060);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 5px;
+        }
+        .dp-spec {
+            background: #fff3e0;
+            border-radius: 5px;
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+
+        .busy-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .busy-badge {
+            background: #ffe0e0;
+            color: #8B0000;
+            border: 1px solid #f5c0c0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .no-busy-dates {
+            background: #d4edda;
+            color: #155724;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+
+        .verified-badge {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 6px;
+            font-style: normal;
+        }
+
         .filters-section {
-            background: var(--color-background-secondary);
+            background: var(--color-background-secondary, #f8f0e4);
             padding: 16px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -135,26 +221,13 @@
             text-align: center;
             padding: 2rem;
         }
-
         .spinner-border {
             color: #8B0000;
         }
-
         .no-priests {
             text-align: center;
             padding: 2rem;
-            color: var(--color-text-secondary);
-        }
-
-        .verified-badge {
-            display: inline-block;
-            background: #d4edda;
-            color: #155724;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-left: 8px;
+            color: var(--color-text-secondary, #8a7060);
         }
     </style>
 </head>
@@ -170,14 +243,12 @@
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
                     <li class="nav-item"><a class="nav-link" href="rituals.html">Rituals</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="kundali.html" id="nav-kundali">Kundali</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="kundali.html">Kundali</a></li>
                     <li class="nav-item"><a class="nav-link active" href="priests-list.html">Priests</a></li>
                     <li class="nav-item"><a class="nav-link" href="schedule.html">Schedule</a></li>
                     <li class="nav-item"><a class="nav-link" href="chats.html">Chats</a></li>
                     <li class="nav-item"><a class="nav-link active" href="profile.html">Profile</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -188,10 +259,10 @@
 
         <div class="filters-section">
             <div class="row">
-                <div class="col-md-6">
-                    <input type="text" id="search-input" class="form-control" placeholder="Search by name, specialization...">
+                <div class="col-md-9">
+                    <input type="text" id="search-input" class="form-control" placeholder="Search by name, specialization..." onkeyup="handleSearchKey(event)">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <button class="btn btn-danger w-100" onclick="searchPriests()">Search</button>
                 </div>
             </div>
@@ -211,22 +282,22 @@
         </div>
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
+
+
         async function loadPriests(search = '') {
             document.getElementById('loading').style.display = 'block';
             document.getElementById('priests-list').innerHTML = '';
+            document.getElementById('no-priests').style.display = 'none';
 
             try {
                 let url = `${BASE_URL}/priests/`;
-                if (search) {
-                    url += `?search=${encodeURIComponent(search)}`;
-                }
+                if (search) url += `?search=${encodeURIComponent(search)}`;
 
-                const res = await fetch(url);
+                const res  = await fetch(url);
                 const data = await res.json();
 
                 document.getElementById('loading').style.display = 'none';
@@ -237,47 +308,70 @@
                     return;
                 }
 
-                const html = priests.map(priest => `
-                    <div class="priest-card">
-                        <div class="priest-header">
-                            <div class="priest-image">🧑‍🩳</div>
-                            <div class="priest-info" style="flex:1">
-                                <h5>
+                const html = priests.map(priest => {
+                    const avatarInner = priest.profile_picture
+                        ? `<img src="${priest.profile_picture}" alt="${priest.full_name}">`
+                        : `🧑‍🩳`;
+
+                    const firstName = priest.full_name.split(' ')[0];
+
+                    return `
+                    <!-- Compact row -->
+                    <div class="priest-row" id="row-${priest.id}">
+                        <div class="priest-avatar">${avatarInner}</div>
+
+                        <div class="priest-main">
+                            <span class="priest-name" onclick="toggleDetail(${priest.id})">
+                                ${priest.full_name}
+                                ${priest.is_verified ? '<span class="verified-badge">✓ Verified</span>' : ''}
+                            </span>
+                            <div class="priest-sub">
+                                ⭐ ${priest.average_rating || 0}/5
+                                &nbsp;|&nbsp; ${priest.experience_years} yrs
+                                &nbsp;|&nbsp; NRs. ${priest.hourly_rate || 0}/hr
+                            </div>
+                        </div>
+
+                        <button class="btn-chat" onclick="startChat(${priest.id})">
+                            💬 Chat
+                        </button>
+                    </div>
+
+                    <!-- Expandable detail panel -->
+                    <div class="detail-panel" id="detail-${priest.id}">
+                        <div class="dp-top">
+                            <div class="dp-avatar">${avatarInner}</div>
+                            <div class="dp-info">
+                                <h4>
                                     ${priest.full_name}
                                     ${priest.is_verified ? '<span class="verified-badge">✓ Verified</span>' : ''}
-                                </h5>
-                                <p> ${priest.average_rating || 0}/5 (${priest.total_reviews || 0} reviews)</p>
+                                </h4>
+                                <p> ${priest.average_rating || 0} / 5 &nbsp;(${priest.total_reviews || 0} reviews)</p>
                                 <p> ${priest.experience_years} years experience</p>
-                                <p> ₹${priest.hourly_rate || 0}/hour</p>
-                                ${priest.bio ? `<p><em>${priest.bio}</em></p>` : ''}
+                                <p> NRs. ${priest.hourly_rate || 0} / hour</p>
                             </div>
                         </div>
 
-                        <div class="priest-specs">
-                            <strong>Specializations:</strong> ${priest.specializations || 'Not specified'}
+                        ${priest.bio ? `<div class="dp-bio">"${priest.bio}"</div>` : ''}
+
+                        <div class="dp-section">
+                            <div class="dp-label">Specializations</div>
+                            <div class="dp-spec">${priest.specializations || 'Not specified'}</div>
                         </div>
 
-                        <div class="busy-dates-section">
-                            <div class="busy-dates-title">When This Priest is Busy</div>
-                            <div id="busy-${priest.id}" class="busy-dates-list">
-                                <div style="font-size:12px; color:#999;">Loading...</div>
+                        <div class="dp-section">
+                            <div class="dp-label">Busy Dates</div>
+                            <div id="busy-${priest.id}" class="busy-badges">
+                                <span style="font-size:12px;color:#999;">Loading…</span>
                             </div>
-                        </div>
-
-                        <div class="priest-actions">
-                            <button class="btn-chat" onclick="startChat(${priest.id})">
-                                Chat with ${priest.full_name.split(' ')[0]}
-                            </button>
                         </div>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
 
                 document.getElementById('priests-list').innerHTML = html;
-                document.getElementById('no-priests').style.display = 'none';
 
-                priests.forEach(priest => {
-                    loadBusyDates(priest.id);
-                });
+                priests.forEach(priest => loadBusyDates(priest.id));
 
             } catch (err) {
                 document.getElementById('loading').style.display = 'none';
@@ -285,33 +379,54 @@
             }
         }
 
+        function toggleDetail(id) {
+            const panel = document.getElementById(`detail-${id}`);
+            const row   = document.getElementById(`row-${id}`);
+            const isOpen = panel.classList.contains('open');
+
+            document.querySelectorAll('.detail-panel.open').forEach(p => p.classList.remove('open'));
+            document.querySelectorAll('.priest-row.expanded').forEach(r => r.classList.remove('expanded'));
+
+            if (!isOpen) {
+                panel.classList.add('open');
+                row.classList.add('expanded');
+            }
+        }
+
         async function loadBusyDates(priestId) {
             try {
-                const res = await fetch(`${BASE_URL}/priests/${priestId}/busy-dates/`);
+                const res  = await fetch(`${BASE_URL}/priests/${priestId}/busy-dates/`);
                 const data = await res.json();
 
                 const busyDates = data.busy_dates || [];
                 const container = document.getElementById(`busy-${priestId}`);
 
                 if (busyDates.length === 0) {
-                    container.innerHTML = '<div class="no-busy-dates">No busy dates currently</div>';
+                    container.innerHTML = '<div class="no-busy-dates"> No busy dates currently</div>';
                 } else {
-                    const badgesHtml = busyDates.slice(0, 5).map(date => {
+                    const shown = busyDates.slice(0, 5).map(date => {
                         const d = new Date(date);
-                        return `<div class="busy-date-badge">${d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</div>`;
+                        return `<div class="busy-badge">${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>`;
                     }).join('');
-
-                    container.innerHTML = badgesHtml + (busyDates.length > 5 ? `<div class="busy-date-badge">+${busyDates.length - 5} more</div>` : '');
+                    const extra = busyDates.length > 5
+                        ? `<div class="busy-badge">+${busyDates.length - 5} more</div>`
+                        : '';
+                    container.innerHTML = shown + extra;
                 }
             } catch (err) {
                 console.error('Error loading busy dates:', err);
-                document.getElementById(`busy-${priestId}`).innerHTML = '<div style="font-size:12px; color:#999;">Could not load busy dates</div>';
+                const container = document.getElementById(`busy-${priestId}`);
+                if (container) container.innerHTML = '<span style="font-size:12px;color:#999;">Could not load busy dates</span>';
             }
         }
 
+
         function searchPriests() {
-            const search = document.getElementById('search-input').value;
-            loadPriests(search);
+            loadPriests(document.getElementById('search-input').value.trim());
+        }
+
+        function handleSearchKey(e) {
+            if (e.key === 'Enter') searchPriests();
         }
 
         function startChat(priestId) {
@@ -320,7 +435,6 @@
                 window.location.href = 'login.html';
                 return;
             }
-
             window.location.href = `chats.html?priest_id=${priestId}`;
         }
 
