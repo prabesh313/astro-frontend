@@ -44,7 +44,6 @@
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Redirect if already logged in
         if (isLoggedIn()) window.location.href = "index.html";
 
         async function handleLogin() {
@@ -62,7 +61,7 @@
             const data = await res.json();
 
             if (res.ok) {
-                saveTokens(data.access, data.refresh);
+                saveTokens(data.access, data.refresh, data.username, data.user_id);
                 window.location.href = "index.html";
             } else {
                 errorDiv.textContent = "Invalid username or password.";

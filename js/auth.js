@@ -2,9 +2,11 @@ function getToken() {
     return localStorage.getItem("access_token");
 }
 
-function saveTokens(access,Refresh){
-    localStorage.setItem("access_token",access);
-    localStorage.setItem("refresh_token",Refresh);
+function saveTokens(access, refresh, username, userId) {
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
+    if (username) localStorage.setItem("username", username);
+    if (userId) localStorage.setItem("user_id", userId);
 }
 
 function isLoggedIn(){

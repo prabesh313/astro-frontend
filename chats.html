@@ -226,6 +226,26 @@
             flex-shrink: 0;
         }
 
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            background: var(--color-background-primary, #fff);
+            min-height: 0;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #fdf8f2;
+            min-height: 0;
+        }
+
         .chat-input-area input {
             flex: 1;
             padding: 10px 14px;
@@ -331,7 +351,7 @@
                     <span>💬</span>
                     <p>Select a conversation to start</p>
                 </div>
-                <div id="chat-content" style="display:none; flex-direction:column; height:100%">
+                <div id="chat-content" style="display:none; flex-direction:column; flex:1; min-height:0; overflow:hidden;">
                     <div class="chat-header" id="chat-header"></div>
                     <div class="messages-area" id="messages-area"></div>
                     <div class="chat-input-area">
@@ -453,7 +473,9 @@
                     headers: { "Authorization": `Bearer ${getToken()}` }
                 });
                 const data = await res.json();
+                // console.log('Messages data:', data);
                 const messages = data.results || data;
+                // console.log('messages array:', messages);
                 const currentUsername = getUsername();
 
                 const html = messages.map(msg => {
@@ -478,8 +500,11 @@
         }
 
         async function sendMessage() {
+            //console.log('selectedChatId:', selectedChatId);
+            //console.log('token:', getToken());
             const input = document.getElementById('message-input');
             const text = input.value.trim();
+            //console.log('message text:', text);
             if (!text || !selectedChatId) return;
             input.value = '';
             try {
@@ -491,7 +516,19 @@
                     },
                     body: JSON.stringify({ message_text: text })
                 });
-                if (res.ok) await loadMessages(selectedChatId);
+                 // console.log('res.ok:', res.ok, 'status:', res.status);  // ← add this
+                const responseData = await res.json();
+                // console.log('response:', responseData);
+
+
+                if (res.ok){
+                    await loadMessages(selectedChatId);
+
+                } 
+                else{
+                    const err=await res.json();
+                    console.error('Error sending message:', err);
+                }
             } catch (err) {
                 console.error('Error sending message:', err);
             }
