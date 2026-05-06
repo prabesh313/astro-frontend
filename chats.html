@@ -61,16 +61,16 @@
 
         .chat-item-info {
             flex: 1;
-            min-width: 0; 
+            min-width: 0;
         }
 
 
         .chat-item-name {
             font-weight: 600;
-            color: #8B0000; 
+            color: #8B0000;
             font-size: 13px;
-            white-space: nowrap; 
-            overflow: hidden; 
+            white-space: nowrap;
+            overflow: hidden;
             text-overflow: ellipsis;
         }
 
@@ -478,6 +478,9 @@
                 // console.log('messages array:', messages);
                 const currentUsername = getUsername();
 
+                const area=document.getElementById('messages-area');
+                const isAtBottom = area.scrollHeight - area.clientHeight - area.scrollTop < 50;
+
                 const html = messages.map(msg => {
                     const isOwn = msg.sender_username === currentUsername;
                     const time = new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
@@ -491,9 +494,11 @@
                         </div>`;
                 }).join('');
 
-                const area = document.getElementById('messages-area');
+                // const area = document.getElementById('messages-area');
                 area.innerHTML = html || '<div style="text-align:center;color:#aaa;font-size:13px;padding:20px;">No messages yet. Say hello! 👋</div>';
-                area.scrollTop = area.scrollHeight;
+                if (isAtBottom) {
+                    area.scrollTop = area.scrollHeight;
+                }
             } catch (err) {
                 console.error('Error loading messages:', err);
             }

@@ -18,7 +18,10 @@
             gap: 14px;
             transition: box-shadow 0.2s, border-radius 0.1s;
         }
-        .priest-row:hover { box-shadow: 0 3px 12px rgba(139,0,0,0.12); }
+        .priest-row:hover {
+            box-shadow: 0 3px 12px rgba(139,0,0,0.12); 
+            }
+
         .priest-row.expanded {
             border-radius: 10px 10px 0 0;
             border-bottom-color: transparent;
@@ -28,25 +31,63 @@
             border-radius: 50%;
             background: linear-gradient(135deg, #f5e6c8, #e8c98a);
             border: 2px solid #c8a951;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 26px; flex-shrink: 0; overflow: hidden;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 26px; 
+            flex-shrink: 0; 
+            overflow: hidden;
         }
-        .priest-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .priest-main { flex: 1; min-width: 0; }
+        .priest-avatar img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 50%; 
+            }
+
+        .priest-main {
+            flex: 1; 
+            min-width: 0;
+            }
+
         .priest-name {
-            font-size: 15px; font-weight: 700; color: #8B0000;
-            cursor: pointer; display: block;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            font-size: 15px;
+            font-weight: 700; 
+            color: #8B0000;
+            cursor: pointer; 
+            display: block;
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
         }
-        .priest-name:hover { text-decoration: underline; }
-        .priest-sub { font-size: 12px; color: var(--color-text-secondary, #8a7060); margin-top: 2px; }
+
+        .priest-name:hover {
+            text-decoration: underline;
+        }
+
+
+        .priest-sub {
+            font-size: 12px;
+            color: var(--color-text-secondary, #8a7060); 
+            margin-top: 2px; 
+            }
         .btn-chat {
-            background: #8B0000; color: white; border: none;
-            padding: 8px 16px; border-radius: 6px;
-            font-size: 13px; font-weight: 600; cursor: pointer;
-            white-space: nowrap; flex-shrink: 0; transition: background 0.2s;
+            background: #8B0000; 
+            color: white; 
+            border: none;
+            padding: 8px 16px; 
+            border-radius: 6px;
+            font-size: 13px; 
+            font-weight: 600; 
+            cursor: pointer;
+            white-space: nowrap; 
+            flex-shrink: 0; 
+            transition: background 0.2s;
         }
-        .btn-chat:hover { background: #c0392b; }
+        .btn-chat:hover { 
+            background: #c0392b; 
+            }
+
         .detail-panel {
             display: none;
             background: #fff8f0;
@@ -58,55 +99,219 @@
             margin-bottom: 10px;
             animation: slideDown 0.22s ease;
         }
-        .detail-panel.open { display: block; }
+        .detail-panel.open { 
+            display: block; 
+            }
+
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-6px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .dp-top { display: flex; gap: 16px; margin-bottom: 14px; }
+        .dp-top { 
+            display: flex; 
+            gap: 16px; 
+            margin-bottom: 14px; 
+            }
         .dp-avatar {
-            width: 72px; height: 72px; border-radius: 8px;
+            width: 72px; 
+            height: 72px; 
+            border-radius: 8px;
             background: linear-gradient(135deg, #f5e6c8, #e8c98a);
             border: 2px solid #c8a951;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 36px; flex-shrink: 0; overflow: hidden;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 36px; 
+            flex-shrink: 0; 
+            overflow: hidden;
         }
-        .dp-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
-        .dp-info h4 { color: #8B0000; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-        .dp-info p { font-size: 13px; color: var(--color-text-secondary, #8a7060); margin: 2px 0; }
+        .dp-avatar img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 6px; 
+            }
+        .dp-info h4 { 
+            color: #8B0000; 
+            font-size: 17px; 
+            font-weight: 700; 
+            margin-bottom: 4px; 
+            }
+
+        .dp-info p { 
+            font-size: 13px; 
+            color: var(--color-text-secondary, #8a7060); 
+            margin: 2px 0; 
+            }
+
         .dp-bio {
-            font-style: italic; font-size: 13px; color: #5a4030;
-            border-left: 3px solid #c8a951; padding-left: 10px; margin-bottom: 12px;
+            font-style: italic; 
+            font-size: 13px; 
+            color: #5a4030;
+            border-left: 3px solid #c8a951; 
+            padding-left: 10px; 
+            margin-bottom: 12px;
         }
-        .dp-section { margin-bottom: 10px; }
+
+        .dp-section {
+            margin-bottom: 10px; 
+            }
+
         .dp-label {
-            font-size: 11px; font-weight: 700;
+            font-size: 11px; 
+            font-weight: 700;
             color: var(--color-text-secondary, #8a7060);
-            text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px;
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+            margin-bottom: 5px;
         }
-        .dp-spec { background: #fff3e0; border-radius: 5px; padding: 8px 10px; font-size: 13px; }
-        .busy-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+        .dp-spec { 
+            background: #fff3e0; 
+            border-radius: 5px; 
+            padding: 8px 10px; 
+            font-size: 13px; 
+            }
+
+        .busy-badges { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 6px; 
+            }
+
         .busy-badge {
-            background: #ffe0e0; color: #8B0000;
+            background: #ffe0e0; 
+            color: #8B0000;
             border: 1px solid #f5c0c0;
-            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: 700;
         }
         .no-busy-dates {
-            background: #d4edda; color: #155724;
-            padding: 6px 12px; border-radius: 6px; font-size: 12px; display: inline-block;
+            background: #d4edda; 
+            color: #155724;
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            font-size: 12px; 
+            display: inline-block;
         }
         .verified-badge {
-            display: inline-block; background: #d4edda; color: #155724;
-            padding: 2px 7px; border-radius: 4px;
-            font-size: 11px; font-weight: 700; margin-left: 6px; font-style: normal;
+            display: inline-block; 
+            background: #d4edda; 
+            color: #155724;
+            padding: 2px 7px; 
+            border-radius: 4px;
+            font-size: 11px; 
+            font-weight: 700; 
+            margin-left: 6px; 
+            font-style: normal;
         }
         .filters-section {
             background: var(--color-background-secondary, #f8f0e4);
-            padding: 16px; border-radius: 8px; margin-bottom: 20px;
+            padding: 16px; 
+            border-radius: 8px; 
+            margin-bottom: 20px;
         }
-        .loading-spinner { text-align: center; padding: 2rem; }
-        .spinner-border { color: #8B0000; }
-        .no-priests { text-align: center; padding: 2rem; color: var(--color-text-secondary, #8a7060); }
+        .loading-spinner { 
+            text-align: center; 
+            padding: 2rem; 
+            }
+
+        .spinner-border {
+            color: #8B0000; 
+            }
+
+        .no-priests { 
+            text-align: center; 
+            padding: 2rem; 
+            color: var(--color-text-secondary, #8a7060); }
+
+
+        .review-section {
+            border-top: 1px solid #e8d5b7;
+            padding-top: 12px;
+            margin-top: 4px;
+        }
+        .star-rating { 
+            display: flex; 
+            gap: 4px; 
+            margin-bottom: 8px; 
+            }
+
+        .star-rating span {
+            font-size: 26px; 
+            cursor: pointer; 
+            color: #ddd;
+            transition: color 0.15s; 
+            line-height: 1;
+        }
+        .star-rating span:hover { 
+            color: #e67e22; 
+            }
+
+        .review-textarea {
+            width: 100%; 
+            padding: 8px 10px;
+            border: 1px solid #e8d5b7; 
+            border-radius: 6px;
+            font-size: 13px; 
+            resize: none; 
+            outline: none;
+            background: #fff;
+        }
+        .review-textarea:focus {
+            border-color: #8B0000; 
+            }
+        .btn-review {
+            width: 100%; 
+            background: #8B0000; 
+            color: white; 
+            border: none;
+            padding: 9px; 
+            border-radius: 6px; 
+            font-size: 13px;
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        .btn-review:hover { 
+            background: #c0392b; 
+            }
+
+        .review-msg { 
+            font-size: 12px; 
+            margin-top: 6px; 
+            }
+
+        .existing-reviews { 
+            margin-top: 10px; 
+        }
+        .review-item {
+            background: #fff; 
+            border: 1px solid #e8d5b7;
+            border-radius: 6px; 
+            padding: 8px 10px; 
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .review-item-header { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 4px; 
+        }
+
+        .review-item-user { 
+            font-weight: 600; 
+            color: #8B0000; 
+            }
+        .review-item-stars { 
+            color: #e67e22; 
+            }
+
+        .review-item-comment { 
+            color: #5a4030; 
+            }
     </style>
 </head>
 <body>
@@ -138,10 +343,10 @@
         <div class="filters-section">
             <div class="row g-2">
                 <div class="col-md-5">
-                    <input type="text" id="search-input" class="form-control" placeholder="Search by name or specialization..." onkeyup="handleSearchKey(event)">
+                    <input type="text" id="search-input" class="form-control" placeholder="Search by name or specialization..."onkeyup="handleSearchKey(event)">
                 </div>
                 <div class="col-md-4">
-                    <input type="text" id="location-input" class="form-control" placeholder="Filter by location"onkeyup="handleSearchKey(event)">
+                    <input type="text" id="location-input" class="form-control"placeholder="Filter by location" onkeyup="handleSearchKey(event)">
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-danger w-100" onclick="searchPriests()">Search</button>
@@ -167,6 +372,28 @@
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
+        function buildReviewForm(priestId) {
+    const stars = [1,2,3,4,5].map(n =>
+        `<span id="star-${priestId}-${n}"
+               onmouseover="hoverRating(${priestId}, ${n})"
+               onmouseout="resetStars(${priestId})"
+               onclick="setRating(${priestId}, ${n})">★</span>`
+    ).join('');
+
+    return `
+        <div id="review-form-${priestId}" style="margin-top:10px;">
+            <div class="dp-label">Write a Review</div>
+            <div class="star-rating" id="stars-${priestId}">${stars}</div>
+            <textarea id="comment-${priestId}" class="review-textarea"
+                      rows="2" placeholder="Share your experience..."></textarea>
+            <button class="btn-review" onclick="submitReview(${priestId})">Submit Review</button>
+            <div id="review-msg-${priestId}" class="review-msg"></div>
+        </div>`;
+}
+
+
+
+        const selectedRatings = {};
 
         async function loadPriests(search = '', address = '') {
             document.getElementById('loading').style.display = 'block';
@@ -177,13 +404,11 @@
                 const params = new URLSearchParams();
                 if (search)  params.append('search', search);
                 if (address) params.append('address', address);
-
                 const queryString = params.toString();
                 const url = `${BASE_URL}/priests/${queryString ? '?' + queryString : ''}`;
 
                 const res  = await fetch(url);
                 const data = await res.json();
-
                 document.getElementById('loading').style.display = 'none';
 
                 const priests = data.results || data;
@@ -194,8 +419,10 @@
 
                 const html = priests.map(priest => {
                     const avatarInner = priest.profile_image
-                        ? `<img src="${priest.profile_image}" alt="${priest.full_name}">`
-                        : `🧑`;
+                        ? `<img src="${priest.profile_image}" alt="${priest.full_name}">` : `🧑`;
+
+                    const stars = '★'.repeat(Math.round(priest.average_rating || 0))
+                                + '☆'.repeat(5 - Math.round(priest.average_rating || 0));
 
                     return `
                     <div class="priest-row" id="row-${priest.id}">
@@ -223,7 +450,7 @@
                                     ${priest.full_name}
                                     ${priest.is_verified ? '<span class="verified-badge">✓ Verified</span>' : ''}
                                 </h4>
-                                <p> ${priest.average_rating || 0} / 5 &nbsp;(${priest.total_reviews || 0} reviews)</p>
+                                <p>⭐ ${priest.average_rating || 0} / 5 &nbsp;(${priest.total_reviews || 0} reviews)</p>
                                 <p> ${priest.experience_years} years experience</p>
                                 <p> NRs. ${priest.hourly_rate || 0} / hour</p>
                                 ${priest.address ? `<p> ${priest.address}</p>` : ''}
@@ -243,12 +470,27 @@
                                 <span style="font-size:12px;color:#999;">Loading…</span>
                             </div>
                         </div>
+
+
+
+
+                    <div class="review-section">
+                        <div class="dp-label review-toggle" onclick="toggleReviews(${priest.id})" style="cursor:pointer;">
+                            Reviews (${priest.total_reviews || 0}) <span id="review-arrow-${priest.id}">▼</span>
+                        </div>
+                        <div id="reviews-content-${priest.id}" style="display:none;">
+                            <div id="reviews-list-${priest.id}" class="existing-reviews">
+                                <span style="font-size:12px;color:#999;">Loading reviews…</span>
+                            </div>
+                            ${isLoggedIn() ? buildReviewForm(priest.id) : '<p style="font-size:12px;color:#888;margin-top:8px;"><a href="login.html" style="color:#8B0000;">Login</a> to write a review</p>'}
+                        </div>
                     </div>
-                    `;
+                    </div>
+    `;
                 }).join('');
 
                 document.getElementById('priests-list').innerHTML = html;
-                priests.forEach(priest => loadBusyDates(priest.id));
+                
 
             } catch (err) {
                 document.getElementById('loading').style.display = 'none';
@@ -260,13 +502,13 @@
             const panel = document.getElementById(`detail-${id}`);
             const row   = document.getElementById(`row-${id}`);
             const isOpen = panel.classList.contains('open');
-
             document.querySelectorAll('.detail-panel.open').forEach(p => p.classList.remove('open'));
             document.querySelectorAll('.priest-row.expanded').forEach(r => r.classList.remove('expanded'));
-
             if (!isOpen) {
                 panel.classList.add('open');
                 row.classList.add('expanded');
+                loadBusyDates(id);
+                
             }
         }
 
@@ -274,27 +516,112 @@
             try {
                 const res  = await fetch(`${BASE_URL}/priests/${priestId}/busy-dates/`);
                 const data = await res.json();
-                console.log('Busy dates response for priest', priestId, data); 
-
                 const busyDates = data.busy_dates || [];
                 const container = document.getElementById(`busy-${priestId}`);
-
                 if (busyDates.length === 0) {
-                    container.innerHTML = '<div class="no-busy-dates"> No busy dates currently</div>';
+                    container.innerHTML = '<div class="no-busy-dates">Hey, I am free. No busy dates</div>';
                 } else {
                     const shown = busyDates.slice(0, 5).map(date => {
                         const d = new Date(date);
                         return `<div class="busy-badge">${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>`;
                     }).join('');
-                    const extra = busyDates.length > 5
-                        ? `<div class="busy-badge">+${busyDates.length - 5} more</div>`
-                        : '';
+                    const extra = busyDates.length > 5 ? `<div class="busy-badge">+${busyDates.length - 5} more</div>` : '';
                     container.innerHTML = shown + extra;
                 }
             } catch (err) {
-                console.error('Error loading busy dates:', err);
                 const container = document.getElementById(`busy-${priestId}`);
-                if (container) container.innerHTML = '<span style="font-size:12px;color:#999;">Could not load busy dates</span>';
+                if (container) container.innerHTML = '<span style="font-size:12px;color:#999;">Could not load</span>';
+            }
+        }
+
+
+        async function loadReviews(priestId) {
+            try {
+                const res  = await fetch(`${BASE_URL}/priests/${priestId}/reviews/`);
+                const data = await res.json();
+                const reviews = data.results || data;
+                const container = document.getElementById(`reviews-list-${priestId}`);
+                if (!container) return;
+
+                if (!Array.isArray(reviews) || reviews.length === 0) {
+                    container.innerHTML = '<div style="font-size:12px;color:#999;">No reviews yet</div>';
+                    return;
+                }
+
+                container.innerHTML = reviews.slice(0, 3).map(r => `
+                    <div class="review-item">
+                        <div class="review-item-header">
+                            <span class="review-item-user">👤 ${r.jajaman_username}</span>
+                            <span class="review-item-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                        </div>
+                        ${r.comment ? `<div class="review-item-comment">${r.comment}</div>` : ''}
+                    </div>
+                `).join('') + (reviews.length > 3 ? `<div style="font-size:12px;color:#888;">+${reviews.length - 3} more reviews</div>` : '');
+
+            } catch (err) {
+                console.error('Error loading reviews:', err);
+            }
+        }
+
+        function hoverRating(priestId, rating) {
+            for (let i = 1; i <= 5; i++) {
+                const star = document.getElementById(`star-${priestId}-${i}`);
+                if (star) star.style.color = i <= rating ? '#e67e22' : '#ddd';
+            }
+        }
+
+        function resetStars(priestId) {
+            const current = selectedRatings[priestId] || 0;
+            for (let i = 1; i <= 5; i++) {
+                const star = document.getElementById(`star-${priestId}-${i}`);
+                if (star) star.style.color = i <= current ? '#e67e22' : '#ddd';
+            }
+        }
+
+        function setRating(priestId, rating) {
+            selectedRatings[priestId] = rating;
+            resetStars(priestId);
+        }
+
+        async function submitReview(priestId) {
+            if (!isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const rating  = selectedRatings[priestId];
+            const comment = document.getElementById(`comment-${priestId}`).value.trim();
+            const msgDiv  = document.getElementById(`review-msg-${priestId}`);
+
+            if (!rating) {
+                msgDiv.style.color = 'red';
+                msgDiv.textContent = 'Please select a star rating first';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${BASE_URL}/reviews/`, {
+                    method: 'POST',
+                    headers: {
+                        "Authorization": `Bearer ${getToken()}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ purohit_id: priestId, rating, comment })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    document.getElementById(`review-form-${priestId}`).innerHTML =
+                        `<div class="no-busy-dates" style="margin-top:8px;"> Review submitted! Thank you.</div>`;
+                    loadReviews(priestId);
+                } else {
+                    msgDiv.style.color = 'red';
+                    const errMsg = data.detail || (Array.isArray(data) ? data[0] : JSON.stringify(data));
+                    msgDiv.textContent = errMsg || 'Could not submit review';
+                }
+            } catch (err) {
+                console.error('Error submitting review:', err);
             }
         }
 
@@ -304,9 +631,27 @@
             loadPriests(search, address);
         }
 
+        function toggleReviews(priestId) {
+            const content = document.getElementById(`reviews-content-${priestId}`);
+            const arrow   = document.getElementById(`review-arrow-${priestId}`);
+            const isOpen  = content.style.display !== 'none';
+
+    if (isOpen) {
+        content.style.display = 'none';
+        arrow.textContent = '▼';
+    } else {
+        content.style.display = 'block';
+        arrow.textContent = '▲';
+        loadReviews(priestId); 
+    }
+}
+
+
+
         function handleSearchKey(e) {
             if (e.key === 'Enter') searchPriests();
         }
+
 
         function startChat(priestUserId) {
             if (!isLoggedIn()) {
@@ -314,7 +659,6 @@
                 window.location.href = 'login.html';
                 return;
             }
-            console.log('Navigating to chat with priest user_id:', priestUserId);
             window.location.href = `chats.html?user_id=${priestUserId}`;
         }
 
