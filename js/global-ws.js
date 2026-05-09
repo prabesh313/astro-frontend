@@ -1,9 +1,11 @@
+//collection of active sockets
 let globalCallSockets = {};
+
 let globalNotification = null;
 
 async function initGlobalCallListeners() {
     if (!isLoggedIn()) return;
-
+    //asks browser for notification permission if not already granted or denied
     if (Notification.permission === 'default') {
         await Notification.requestPermission();
     }
@@ -23,18 +25,20 @@ async function initGlobalCallListeners() {
 }
 
 function openGlobalCallSocket(chat) {
+    //if a socket already exists for this chat, don't create a new one
     if (globalCallSockets[chat.id]) return;
 
     const ws = new WebSocket(`ws://127.0.0.1:8000/ws/calls/${chat.id}/?token=${getToken()}`);
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        // Ignore messages from self to prevent duplicate notifications
         if (data.sender_username === (localStorage.getItem('username') || '')) return;
 
         if (data.type === 'call_request') {
             const name = chat.other_user_profile?.full_name || chat.other_username || data.sender_username;
             const callLabel = data.call_type === 'video' ? 'Video Call' : 'Audio Call';
-
+            // Store incoming call details in browser storage for retrieval on chats.html
             localStorage.setItem('incoming_call', JSON.stringify({
                 chatId:    chat.id,
                 callType:  data.call_type || 'video',
@@ -55,7 +59,7 @@ function openGlobalCallSocket(chat) {
         delete globalCallSockets[chat.id];
         setTimeout(() => openGlobalCallSocket(chat), 5000);
     };
-
+    // Store the WebSocket instance for this chat
     globalCallSockets[chat.id] = ws;
 }
 
@@ -69,7 +73,7 @@ function showCallNotification(callerName, callLabel, chatId, callType) {
         }
         return;
     }
-
+    // Close any existing notification before showing a new one
     if (globalNotification) globalNotification.close();
 
     globalNotification = new Notification(`📞 Incoming ${callLabel}`, {
@@ -85,15 +89,16 @@ function showCallNotification(callerName, callLabel, chatId, callType) {
         globalNotification.close();
     };
 
+    // Auto-close the notification after 30 seconds if not interacted with
     setTimeout(() => {
         if (globalNotification) { globalNotification.close(); globalNotification = null; }
         localStorage.removeItem('incoming_call');
     }, 30000);
 }
-
+// Clean up WebSocket connections when the user leaves the page
 window.addEventListener('beforeunload', () => {
     Object.values(globalCallSockets).forEach(ws => ws.close());
 });
 
-
+//run global call listeners after the page loads to ensure user is authenticated and chats are available
 document.addEventListener('DOMContentLoaded', initGlobalCallListeners);
