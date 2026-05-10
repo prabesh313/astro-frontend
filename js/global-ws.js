@@ -49,6 +49,10 @@ function openGlobalCallSocket(chat) {
             showCallNotification(name, callLabel, chat.id, data.call_type);
         }
 
+        if (data.type === 'call_offer') {
+            localStorage.setItem('incoming_offer', JSON.stringify(data));
+    }
+
         if (data.type === 'call_end' || data.type === 'call_reject') {
             localStorage.removeItem('incoming_call');
             if (globalNotification) { globalNotification.close(); globalNotification = null; }

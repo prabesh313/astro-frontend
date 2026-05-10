@@ -523,6 +523,7 @@
                 }
                 case 'call_offer':
                     incomingOffer = data;
+                    localStorage.setItem('incoming_offer', JSON.stringify(data));
                     break;
                 case 'call_end':
                     if (incomingChatId === chatId) {
@@ -782,6 +783,20 @@
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);// send the offer to the other user via WebSocket, which then forwards it to the other user's browser
         sendCallSignal({ type: 'call_offer', sdp: offer, call_type: callType });
+
+        // re-send offer after 3s in case callee just loaded the page
+        setTimeout(() => {
+            if (peerConnection && peerConnection.signalingState !== 'stable') {
+                sendCallSignal({ type: 'call_offer', sdp: offer, call_type: callType });
+            }
+        }, 3000);
+
+        // re-send again after 6s
+        setTimeout(() => {
+            if (peerConnection && peerConnection.signalingState !== 'stable') {
+                sendCallSignal({ type: 'call_offer', sdp: offer, call_type: callType });
+            }
+        }, 6000);
     }
 
     function showIncomingCallUI(data, chatId) {
@@ -812,7 +827,7 @@
         // if call came from a different chat, switch to it
         if (incomingChatId && incomingChatId !== selectedChatId) {
             await selectChat(incomingChatId, null);
-            await new Promise(r => setTimeout(r, 800)); // wait for sockets
+            await new Promise(r => setTimeout(r, 1000)); // wait for sockets
         }
 
         try {
@@ -822,13 +837,26 @@
         showCallWindow(callType);
         await createPeerConnection();
 
+        if(!incomingOffer) {
+            const stored = localStorage.getItem('incoming_offer');
+            if (stored) {
+                incomingOffer = JSON.parse(stored);
+            }
+        }
+
+        if(!incomingOffer){
         // wait for offer if not received yet
         let waited = 0;
-        while (!incomingOffer && waited < 5000) {
-            await new Promise(r => setTimeout(r, 200));// is offer received via WebSocket? if not, keep waiting (offer should arrive within a few seconds after accept)
-            waited += 200;
+        while (!incomingOffer && waited < 8000) {
+            await new Promise(r => setTimeout(r, 300));// is offer received via WebSocket? if not, keep waiting (offer should arrive within a few seconds after accept)
+            waited += 300;
+            const stored = localStorage.getItem('incoming_offer');
+            if (stored) { incomingOffer = JSON.parse(stored); break; }
+        }
         }
         if (!incomingOffer) { alert('Call connection failed. Please try again.'); cleanupCall(); return; }
+        
+        localStorage.removeItem('incoming_offer');  // clean up
 
         await peerConnection.setRemoteDescription(new RTCSessionDescription(incomingOffer.sdp));// create an answer to the received offer, set it as local description, and send it back to the caller via WebSocket, which then forwards it to the caller's browser
         const answer = await peerConnection.createAnswer();// set the generated answer as the local description of the peer connection
@@ -919,6 +947,7 @@
         document.getElementById('call-window').classList.remove('show');
         document.getElementById('incoming-call-overlay').classList.remove('show');
         localStorage.removeItem('incoming_call');
+        localStorage.removeItem('incoming_offer');
         isMuted = false; isVideoOff = false; isCaller = false; incomingChatId = null;
         document.getElementById('mute-btn').classList.remove('active');
         document.getElementById('video-btn').classList.remove('active');
