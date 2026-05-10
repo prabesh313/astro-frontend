@@ -609,7 +609,7 @@
 
         function showError(msg) {
             const el = document.getElementById('error-msg');
-            el.textContent = '❌ ' + msg;
+            el.textContent = 'Issue: ' + msg;
             el.style.display = 'block';
             setTimeout(() => el.style.display = 'none', 5000);
         }

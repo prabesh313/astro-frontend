@@ -306,8 +306,7 @@
                     <div class="chat-header" id="chat-header"></div>
                     <div class="messages-area" id="messages-area"></div>
                     <div class="chat-input-area">
-                        <button class="input-icon-btn" onclick="startCall('audio')" title="Audio Call">📞</button>
-                        <button class="input-icon-btn" onclick="startCall('video')" title="Video Call">📹</button>
+
                         <input type="text" id="message-input" placeholder="Type a message...">
                         <button class="send-btn" onclick="sendMessage()">Send</button>
                     </div>
@@ -741,7 +740,16 @@
     }
     function buildMessageHtml(msg) {
         const isOwn = msg.sender_username === getUsername();
+        const isSystem= msg.is_system ;
         const time  = new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        
+        if (isSystem) {
+        return `
+            <div class="message system" data-date="${msg.created_at}">
+                <div class="message-bubble">${msg.message_text}</div>
+            </div>`;
+    }
+
         return `
             <div class="message ${isOwn ? 'own' : 'other'}" data-date="${msg.created_at}">
                 <div class="message-bubble">${msg.message_text}</div>
@@ -952,10 +960,11 @@
     function rejectCall() {
         document.getElementById('incoming-call-overlay').classList.remove('show');
         localStorage.removeItem('incoming_call');
-        sendCallSignal({ type: 'call_reject' });
+        sendCallSignal({ type: 'call_reject', call_type: callType });
         incomingOffer  = null;
         incomingChatId = null;
     }
+
 
 
     async function createPeerConnection() {
@@ -1019,9 +1028,9 @@
 
     }
 
-    function endCall() { sendCallSignal({ type: 'call_end' }); cleanupCall(); appendSystemMessage('📵 Call ended'); }
-    function handleRemoteCallEnd() { cleanupCall(); appendSystemMessage('📵 Call ended'); }
-    function handleCallRejected()  { cleanupCall(); appendSystemMessage('❌ Call was declined'); }
+    function endCall() { sendCallSignal({ type: 'call_end', call_type: callType, duration: callSeconds }); cleanupCall();  }
+    function handleRemoteCallEnd() { cleanupCall();  }
+    function handleCallRejected()  { cleanupCall();  }
 
     function cleanupCall() {
         if (callTimerInterval) { clearInterval(callTimerInterval); callTimerInterval = null; }
