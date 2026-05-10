@@ -27,6 +27,16 @@
             color: #8B0000; border-bottom: 1px solid var(--color-border-tertiary, #e8d5b7);
             background: #fff8f0;
         }
+        .date-separator {
+            display: flex; align-items: center; gap: 10px;
+            margin: 8px 0; color: #aaa; font-size: 11px;
+        }
+        .date-separator::before,
+        .date-separator::after {
+            content: ''; flex: 1;
+            height: 1px; background: #e8d5b7;
+}
+
         .chat-item {
             padding: 12px 14px;
             border-bottom: 1px solid var(--color-border-tertiary, #f0e8dc);
@@ -158,7 +168,6 @@
         .no-chats { padding: 20px; text-align: center; color: var(--color-text-secondary, #8a7060); font-size: 13px; }
         .loading-chats { padding: 20px; text-align: center; }
 
-        /* ── Incoming call overlay ── */
         .call-overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.78); z-index: 9999;
@@ -395,6 +404,36 @@
         return n;
     }
 
+    function formatChatListTime(date) {
+        const now   = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const msgDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const diffDays = Math.round((today - msgDay) / 86400000);
+
+        if (diffDays === 0) return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (diffDays < 7)  return date.toLocaleDateString([], { weekday: 'short' });
+        return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+    
+    function formatDateSeparator(date) {
+        const now    = new Date();
+        const today  = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const msgDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const diffDays = Math.round((today - msgDay) / 86400000);
+
+        if (diffDays === 0) return 'Today';
+        if (diffDays === 1) return 'Yesterday';
+        return date.toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    function isSameDay(a, b) {
+        return a.getFullYear() === b.getFullYear()
+            && a.getMonth()    === b.getMonth()
+            && a.getDate()     === b.getDate();
+    }
+
+
+
     function renderChatList() {
         if (!Array.isArray(chatsData) || chatsData.length === 0) {
             document.getElementById('no-chats').style.display = 'block';
@@ -402,12 +441,20 @@
             return;
         }
         document.getElementById('no-chats').style.display = 'none';
-        document.getElementById('chats-list').innerHTML = chatsData.map(chat => {
+        const sorted = [...chatsData].sort((a, b) => {
+        const aTime = a.last_message ? new Date(a.last_message.created_at) : new Date(a.updated_at);
+        const bTime = b.last_message ? new Date(b.last_message.created_at) : new Date(b.updated_at);
+        return bTime - aTime;
+    });
+
+
+        document.getElementById('chats-list').innerHTML = sorted.map(chat => {
             const name    = chat.other_username || 'Unknown';
             const profile = chat.other_user_profile || {};
             const avatar  = profile.profile_image ? `<img src="${profile.profile_image}" alt="${name}">` : `🧑`;
             const preview = chat.last_message ? chat.last_message.message_text.substring(0, 35) + '...' : 'No messages yet';
-            const time    = chat.last_message ? new Date(chat.last_message.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+            const time = chat.last_message ? formatChatListTime(new Date(chat.last_message.created_at)) : '';
+
             return `
             <div class="chat-item" id="chat-item-${chat.id}" onclick="selectChat(${chat.id}, this)">
                 <div class="chat-item-avatar">${avatar}</div>
@@ -666,22 +713,37 @@
 
     async function loadMessages(chatId) {
         try {
-            const res  = await fetch(`${BASE_URL}/chats/${chatId}/messages/`, { headers: { "Authorization": `Bearer ${getToken()}` } });
-            const data = await res.json();
+            const res      = await fetch(`${BASE_URL}/chats/${chatId}/messages/`, { headers: { "Authorization": `Bearer ${getToken()}` } });
+            const data     = await res.json();
             const messages = data.results || data;
-            const area = document.getElementById('messages-area');
-            const atBottom = area.scrollHeight - area.clientHeight - area.scrollTop < 50;
-            area.innerHTML = messages.map(buildMessageHtml).join('')
-                || '<div style="text-align:center;color:#aaa;font-size:13px;padding:20px;">No messages yet. Say hello! 👋</div>';
-            if (atBottom) area.scrollTop = area.scrollHeight;
+            const area     = document.getElementById('messages-area');
+
+            if (!messages.length) {
+                area.innerHTML = '<div style="text-align:center;color:#aaa;font-size:13px;padding:20px;">No messages yet. Say hello! 👋</div>';
+                return;
+            }
+
+            let html = '';
+            let lastDate = null;
+
+            messages.forEach(msg => {
+                const msgDate = new Date(msg.created_at);
+                if (!lastDate || !isSameDay(lastDate, msgDate)) {
+                    html += `<div class="date-separator">${formatDateSeparator(msgDate)}</div>`;
+                    lastDate = msgDate;
+                }
+                html += buildMessageHtml(msg);
+            });
+
+            area.innerHTML = html;
+            area.scrollTop = area.scrollHeight;
         } catch (err) { console.error('Error loading messages:', err); }
     }
-
     function buildMessageHtml(msg) {
         const isOwn = msg.sender_username === getUsername();
         const time  = new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
         return `
-            <div class="message ${isOwn ? 'own' : 'other'}">
+            <div class="message ${isOwn ? 'own' : 'other'}" data-date="${msg.created_at}">
                 <div class="message-bubble">${msg.message_text}</div>
                 <div class="message-meta">
                     <div class="message-time">${time}</div>
@@ -695,9 +757,21 @@
         if (!area) return;
         const ph = area.querySelector('div[style*="text-align:center"]');
         if (ph) ph.remove();
+
+        const msgDate  = new Date(msg.created_at);
+        const lastMsg  = area.lastElementChild;
+        const lastTime = lastMsg?.dataset?.date ? new Date(lastMsg.dataset.date) : null;
+        if (!lastTime || !isSameDay(lastTime, msgDate)) {
+            const sep = document.createElement('div');
+            sep.className   = 'date-separator';
+            sep.textContent = formatDateSeparator(msgDate);
+            area.appendChild(sep);
+        }
         const div = document.createElement('div');
         div.innerHTML = buildMessageHtml(msg);
-        area.appendChild(div.firstElementChild);
+        const el = div.firstElementChild;
+        el.dataset.date = msg.created_at;
+        area.appendChild(el);
         area.scrollTop = area.scrollHeight;
     }
 
