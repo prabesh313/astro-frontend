@@ -43,6 +43,7 @@ function openGlobalCallSocket(chat) {
                 chatId:    chat.id,
                 callType:  data.call_type || 'video',
                 callerName: name,
+                profileImage: chat.other_user_profile?.profile_image || null,
                 timestamp: Date.now(),
             }));
 

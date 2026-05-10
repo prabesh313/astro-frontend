@@ -309,7 +309,7 @@
 
     <div class="call-overlay" id="incoming-call-overlay">
         <div class="call-box">
-            <div class="caller-avatar">🧑</div>
+            <div class="caller-avatar" id="caller-avatar">🧑</div>
             <h4 id="caller-name">Someone</h4>
             <p id="call-type-label">Incoming video call...</p>
             <div class="call-actions">
@@ -319,7 +319,6 @@
         </div>
     </div>
 
-    <!-- Active call window -->
     <div class="call-window" id="call-window">
         <div class="call-window-name" id="call-window-name">Calling...</div>
         <div class="call-timer" id="call-timer">00:00</div>
@@ -328,7 +327,7 @@
             <video id="local-video"  autoplay playsinline muted></video>
         </div>
         <div id="audio-call-ui" class="audio-call-ui" style="display:none;">
-            <div class="audio-big-avatar">🧑</div>
+            <div class="audio-big-avatar" id="audio-big-avatar">🧑</div>
             <h3 id="audio-peer-name">Calling...</h3>
             <p id="audio-status">Ringing...</p>
         </div>
@@ -456,7 +455,10 @@
                     incomingChatId = chatId;
                     document.getElementById('caller-name').textContent     = info.callerName || 'Someone';
                     document.getElementById('call-type-label').textContent = callType === 'video' ? 'Incoming video call...' : 'Incoming audio call...';
+                    const avatarEl = document.getElementById('caller-avatar');
+                    avatarEl.innerHTML = info.profileImage ? `<img src="${info.profileImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '🧑';
                     document.getElementById('incoming-call-overlay').classList.add('show');
+
                     // wait for callSocket to connect, then handle offer
                     setTimeout(waitForOfferFromStorage, 1500);
                 }
@@ -503,10 +505,13 @@
 
                     const chat  = chatsData.find(c => c.id === chatId);
                     const name  = chat ? (chat.other_user_profile?.full_name || chat.other_username) : data.sender_username;
+                    const imgUrl = chat?.other_user_profile?.profile_image;
 
+                    const avatarEl = document.getElementById('caller-avatar');  // ← add
+                    avatarEl.innerHTML = imgUrl ? `<img src="${imgUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '🧑';
                     // store in localStorage so other pages can see it
                     localStorage.setItem('incoming_call', JSON.stringify({
-                        chatId, callType, callerName: name, timestamp: Date.now()
+                        chatId, callType, callerName: name, profileImage: imgUrl || null , timestamp: Date.now()
                     }));
 
                     document.getElementById('caller-name').textContent     = name;
@@ -806,8 +811,12 @@
 
         const chat  = chatsData.find(c => c.id === chatId);
         const name  = chat ? (chat.other_user_profile?.full_name || chat.other_username) : data.sender_username;
+        const imgUrl  = chat?.other_user_profile?.profile_image;
 
-        localStorage.setItem('incoming_call', JSON.stringify({ chatId, callType, callerName: name, timestamp: Date.now() }));
+        const avatarEl = document.getElementById('caller-avatar');
+        avatarEl.innerHTML = imgUrl ? `<img src="${imgUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`: '🧑';
+
+        localStorage.setItem('incoming_call', JSON.stringify({ chatId, callType, callerName: name, profileImage: imgUrl || null , timestamp: Date.now() }));
 
         document.getElementById('caller-name').textContent     = name;
         document.getElementById('call-type-label').textContent = callType === 'video' ? 'Incoming video call...' : 'Incoming audio call...';
@@ -916,6 +925,8 @@
         document.getElementById('call-window').classList.add('show');
         const chat = chatsData.find(c => c.id === (incomingChatId || selectedChatId));
         const name  = chat ? (chat.other_user_profile?.full_name || chat.other_username) : 'Unknown';
+        const imgUrl = chat?.other_user_profile?.profile_image;
+
         document.getElementById('call-window-name').textContent = name;
         if (type === 'video') {
             document.getElementById('video-call-ui').style.display = 'flex';
@@ -927,7 +938,11 @@
             document.getElementById('video-btn').style.display     = 'none';
             document.getElementById('audio-peer-name').textContent = name;
             document.getElementById('audio-status').textContent    = status || 'Ringing...';
+
+            const bigAvatar = document.getElementById('audio-big-avatar');
+            bigAvatar.innerHTML = imgUrl ? `<img src="${imgUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '🧑';
         }
+
     }
 
     function endCall() { sendCallSignal({ type: 'call_end' }); cleanupCall(); appendSystemMessage('📵 Call ended'); }
@@ -993,6 +1008,9 @@
             incomingChatId = info.chatId;
             document.getElementById('caller-name').textContent     = info.callerName;
             document.getElementById('call-type-label').textContent = callType === 'video' ? 'Incoming video call...' : 'Incoming audio call...';
+            const avatarEl = document.getElementById('caller-avatar');
+            avatarEl.innerHTML = info.profileImage ? `<img src="${info.profileImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '🧑';
+
             document.getElementById('incoming-call-overlay').classList.add('show');
         }
         if (e.key === 'incoming_call' && !e.newValue) {

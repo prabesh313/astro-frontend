@@ -367,6 +367,11 @@
                             <label class="form-label">Full Name *</label>
                             <input type="text" id="edit-full-name" class="form-control" required>
                         </div>
+                        <div class="mb-3">
+                                <label class="form-label">Profile Photo</label>
+                                <input type="file" id="edit-profile-image" class="form-control" accept="image/*">
+                                <img id="image-preview" class="image-upload-preview" style="display:none">
+                            </div>
                     </div>
 
                     <div class="form-section">
@@ -432,11 +437,7 @@
                                 <input type="number" id="edit-hourly-rate" class="form-control" step="0.01" min="0">
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Profile Photo</label>
-                                <input type="file" id="edit-profile-image" class="form-control" accept="image/*">
-                                <img id="image-preview" class="image-upload-preview" style="display:none">
-                            </div>
+                
                         </div>
                     </div>
 
@@ -562,6 +563,9 @@
             if (latitude) formData.append('birth_latitude', parseFloat(latitude));
             if (longitude) formData.append('birth_longitude', parseFloat(longitude));
 
+            const imageFile = document.getElementById('edit-profile-image').files[0];
+            if (imageFile) formData.append('profile_image', imageFile);
+
             if (profileData.user_type === 'purohit') {
                 formData.append('bio', document.getElementById('edit-bio').value);
                 formData.append('phone_number', document.getElementById('edit-phone').value);
@@ -570,10 +574,7 @@
                 formData.append('experience_years', parseInt(document.getElementById('edit-experience-years').value) || 0);
                 formData.append('hourly_rate', parseFloat(document.getElementById('edit-hourly-rate').value) || 0);
 
-                const imageFile = document.getElementById('edit-profile-image').files[0];
-                if (imageFile) {
-                    formData.append('profile_image', imageFile);
-                }
+    
             }
 
             try {
