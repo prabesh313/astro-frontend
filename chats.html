@@ -621,8 +621,8 @@
         const avatar  = profile.profile_image ? `<img src="${profile.profile_image}" alt="${name}">` : `🧑`;
 
         document.getElementById('chat-header').innerHTML = `
-            <div class="chat-header-avatar">${avatar}</div>
-            <div class="chat-header-info">
+            <div class="chat-header-avatar"onclick="window.location.href='profile.html?user_id=${chat.other_user_id}'" style="cursor:pointer" title="View profile">${avatar}</div>
+            <div class="chat-header-info" onclick="window.location.href='profile.html?user_id=${chat.other_user_id}'" style="cursor:pointer" title="View profile">
                 <h5>${profile.full_name || name}</h5>
                 ${profile.user_type ? `<small>${profile.user_type}</small>` : ''}
             </div>

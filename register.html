@@ -69,14 +69,25 @@
 
             console.log(res.status, data);
 
-            if (res.ok) {
-                successDiv.textContent = "Account created! Please create your profile...";
-                successDiv.classList.remove("d-none");
-                setTimeout(() => window.location.href = "profile.html", 2000);
+        if (res.ok) {
+            successDiv.textContent = "Account created! Please create you profile...";
+            successDiv.classList.remove("d-none");
+
+            // auto-login after registration
+            const loginRes  = await loginUser(username, password);
+            const loginData = await loginRes.json();
+
+            if (loginRes.ok) {
+                localStorage.setItem('access_token', loginData.access);
+                localStorage.setItem('refresh_token', loginData.refresh);
+                localStorage.setItem('username', loginData.username);
+                localStorage.setItem('user_id', loginData.user_id);
+                setTimeout(() => window.location.href = 'profile.html', 1000);
             } else {
-                errorDiv.textContent = JSON.stringify(data);
-                errorDiv.classList.remove("d-none");
+                // login failed for some reason, send to login page
+                setTimeout(() => window.location.href = 'login.html', 1500);
             }
+}
         }
     </script>
 </body>
