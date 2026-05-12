@@ -534,7 +534,7 @@
     }
 
     function openGlobalCallSocket(chatId) {
-        const ws = new WebSocket(`ws://127.0.0.1:8000/ws/calls/${chatId}/?token=${getToken()}`);
+        const ws = new WebSocket(`wss://astro-production-6c88.up.railway.app/ws/calls/${chatId}/?token=${getToken()}`);
 
         ws.onmessage = async (event) => {
             const data = JSON.parse(event.data);
@@ -652,7 +652,7 @@
         if (chatSocket) { chatSocket.onclose = null; chatSocket.close(); chatSocket = null; }
         if (chatReconnect) { clearTimeout(chatReconnect); chatReconnect = null; }
         setWsStatus('connecting');
-        chatSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chats/${chatId}/?token=${getToken()}`);
+        chatSocket = new WebSocket(`wss://astro-production-6c88.up.railway.app/ws/chats/${chatId}/?token=${getToken()}`);
         chatSocket.onopen  = () => setWsStatus('connected');
         chatSocket.onclose = () => {
             setWsStatus('disconnected');
@@ -673,7 +673,7 @@
     function connectCallSocket(chatId) {
         if (callSocket) { callSocket.onclose = null; callSocket.close(); callSocket = null; }
         if (callReconnect) { clearTimeout(callReconnect); callReconnect = null; }
-        callSocket = new WebSocket(`ws://127.0.0.1:8000/ws/calls/${chatId}/?token=${getToken()}`);
+        callSocket = new WebSocket(`wss://astro-production-6c88.up.railway.app/ws/calls/${chatId}/?token=${getToken()}`);
         callSocket.onclose = () => {
             if (selectedChatId === chatId)
                 callReconnect = setTimeout(() => connectCallSocket(chatId), 3000);

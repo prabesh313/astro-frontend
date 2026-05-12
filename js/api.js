@@ -1,4 +1,4 @@
-const BASE_URL="http://127.0.0.1:8000/api";
+const BASE_URL="https://astro-production-6c88.up.railway.app/api";
 
 //get token from local storage
 function getToken(){

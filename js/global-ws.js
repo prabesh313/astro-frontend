@@ -28,7 +28,7 @@ function openGlobalCallSocket(chat) {
     //if a socket already exists for this chat, don't create a new one
     if (globalCallSockets[chat.id]) return;
 
-    const ws = new WebSocket(`ws://127.0.0.1:8000/ws/calls/${chat.id}/?token=${getToken()}`);
+    const ws = new WebSocket(`wss://astro-production-6c88.up.railway.app/ws/calls/${chat.id}/?token=${getToken()}`);
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
