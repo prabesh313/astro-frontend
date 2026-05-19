@@ -226,9 +226,9 @@
                     <li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
                     <li class="nav-item"><a class="nav-link" href="rituals.html">Rituals</a></li>
                     <li class="nav-item"><a class="nav-link" href="kundali.html">Kundali</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="priests-list.html">Priest</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="chat.html">Chat</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="profile.html">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="priests-list.html">Priest</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat.html">Chat</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
 
                     
                     <li class="nav-item">
@@ -344,8 +344,7 @@
                 document.getElementById('selected-rashi-title').innerHTML = `
                     <span>${rashiName}</span>
                 `;
-                document.getElementById('cached-badge').textContent = 
-                    data.cached ? '✓ Cached Today' : '✓ Just Fetched';
+                
                 
                 document.getElementById('horoscope-text').textContent = horoscope.prediction || 'No prediction available';
 
@@ -360,37 +359,37 @@
 
                 document.getElementById('prediction-grid').innerHTML = `
                     <div class="prediction-item">
-                        <div class="prediction-label">💕 प्रेम</div>
+                        <div class="prediction-label"> प्रेम</div>
                         <div class="prediction-val">${horoscope.love_score}/5</div>
                         <div class="rating-stars">${renderStars(horoscope.love_score)}</div>
                     </div>
                     <div class="prediction-item">
-                        <div class="prediction-label">💼 व्यवसाय</div>
+                        <div class="prediction-label"> व्यवसाय</div>
                         <div class="prediction-val">${horoscope.career_score}/5</div>
                         <div class="rating-stars">${renderStars(horoscope.career_score)}</div>
                     </div>
                     <div class="prediction-item">
-                        <div class="prediction-label">💪 स्वास्थ्य</div>
+                        <div class="prediction-label"> स्वास्थ्य</div>
                         <div class="prediction-val">${horoscope.health_score}/5</div>
                         <div class="rating-stars">${renderStars(horoscope.health_score)}</div>
                     </div>
                     <div class="prediction-item">
-                        <div class="prediction-label">💰 आर्थिक</div>
+                        <div class="prediction-label"> आर्थिक</div>
                         <div class="prediction-val">${horoscope.money_score}/5</div>
                         <div class="rating-stars">${renderStars(horoscope.money_score)}</div>
                     </div>
                     <div class="prediction-item">
-                        <div class="prediction-label">🎨 भाग्यशाली रंग</div>
+                        <div class="prediction-label"> भाग्यशाली रंग</div>
                         <div class="prediction-val">${horoscope.lucky_color || '—'}</div>
                     </div>
                     <div class="prediction-item">
-                        <div class="prediction-label">🔢 भाग्यशाली अंक</div>
+                        <div class="prediction-label"> भाग्यशाली अंक</div>
                         <div class="prediction-val">${horoscope.lucky_number || '—'}</div>
                     </div>
                 `;
 
                 document.getElementById('advice-box').innerHTML = `
-                    <div class="advice-title">💡 आज का सुझाव</div>
+                    <div class="advice-title"> आज का सुझाव</div>
                     <div class="advice-text">${horoscope.advice || 'सकारात्मक दृष्टिकोण बनाए रखें'}</div>
                 `;
 

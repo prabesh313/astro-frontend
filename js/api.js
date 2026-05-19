@@ -1,6 +1,6 @@
-const BASE_URL="https://astro-production-6c88.up.railway.app/api";
+const IS_LOCAL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
 
-//get token from local storage
+const BASE_URL = IS_LOCAL ? 'http://127.0.0.1:8000/api' : 'https://astro-production-6c88.up.railway.app/api';
 function getToken(){
     return localStorage.getItem("access_token");
 

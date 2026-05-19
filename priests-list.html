@@ -326,11 +326,11 @@
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
                     <li class="nav-item"><a class="nav-link" href="rituals.html">Rituals</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="kundali.html">Kundali</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="priests-list.html">Priests</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kundali.html">Kundali</a></li>
                     <li class="nav-item"><a class="nav-link" href="schedule.html">Schedule</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="priests-list.html">Priests</a></li>
                     <li class="nav-item"><a class="nav-link" href="chats.html">Chats</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="profile.html">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
                 </ul>
             </div>
@@ -440,7 +440,7 @@
                                 ${priest.address ? `&nbsp;|&nbsp;  ${priest.address}` : ''}
                             </div>
                         </div>
-                        <button class="btn-chat" onclick="startChat(${priest.user_id})">💬 Chat</button>
+                        <button class="btn-chat" onclick="startChat(${priest.user_id})">Chat</button>
                     </div>
 
                     <div class="detail-panel" id="detail-${priest.id}">

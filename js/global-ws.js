@@ -1,6 +1,7 @@
+const WS_BASE = IS_LOCAL ? 'ws://127.0.0.1:8000' : 'wss://astro-production-6c88.up.railway.app';
+
 //collection of active sockets
 let globalCallSockets = {};
-
 let globalNotification = null;
 
 async function initGlobalCallListeners() {
@@ -28,7 +29,7 @@ function openGlobalCallSocket(chat) {
     //if a socket already exists for this chat, don't create a new one
     if (globalCallSockets[chat.id]) return;
 
-    const ws = new WebSocket(`wss://astro-production-6c88.up.railway.app/ws/calls/${chat.id}/?token=${getToken()}`);
+    const ws = new WebSocket(`${WS_BASE}/ws/calls/${chat.id}/?token=${getToken()}`);
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
